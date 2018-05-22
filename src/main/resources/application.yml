@@ -1,0 +1,12 @@
+spring:
+  thymeleaf:
+    suffix: .html
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/photostudio?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: zhouyiran
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
