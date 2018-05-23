@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Table(name = "t_notice")
 @Data
 // https://colorlib.com/polygon/gentelella/form_wizards.html
+// https://pratikborsadiya.in
 public class Notice {
 
     @Id
