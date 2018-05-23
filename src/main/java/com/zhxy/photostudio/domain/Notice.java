@@ -7,6 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_notice")
 @Data
+// https://colorlib.com/polygon/gentelella/form_wizards.html
 public class Notice {
 
     @Id
