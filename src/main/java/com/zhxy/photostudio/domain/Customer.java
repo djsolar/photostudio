@@ -26,4 +26,11 @@ public class Customer {
     private String address;
 
     private Long weedingDate;
+
+    private Long updateTime;
+
+    private Long createTime;
+
+    @OneToOne(mappedBy = "customer")
+    private Order order;
 }

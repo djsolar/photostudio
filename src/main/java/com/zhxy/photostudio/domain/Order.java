@@ -32,4 +32,8 @@ public class Order {
     @JoinColumn(name = "service_id")
     private ServicePackage servicePackage;
 
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
 }
