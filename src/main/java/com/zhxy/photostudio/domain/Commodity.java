@@ -23,8 +23,9 @@ public class Commodity {
     private String price;
 
     @Column(length = 8)
-    private String standard;
-
-    @Column(length = 8)
     private String unit;
+
+    private Long createTime;
+
+    private Long updateTime;
 }

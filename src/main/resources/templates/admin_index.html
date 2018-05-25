@@ -13,22 +13,9 @@
     <link th:href="@{/vendors/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet">
     <!-- Font Awesome -->
     <link th:href="@{/vendors/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
-    <!-- NProgress -->
-    <link th:href="@{/vendors/nprogress/nprogress.css}" rel="stylesheet">
-
-    <!-- iCheck -->
-    <link th:href="@{/vendors/iCheck/skins/flat/green.css}" rel="stylesheet">
-
-    <!-- bootstrap-progressbar -->
-    <link th:href="@{/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css}" rel="stylesheet">
-    <!-- JQVMap -->
-    <link th:href="@{/vendors/jqvmap/dist/jqvmap.min.css}" rel="stylesheet"/>
-
-    <!-- bootstrap-daterangepicker -->
-    <link th:href="@{/vendors/bootstrap-daterangepicker/daterangepicker.css}" rel="stylesheet">
 
     <!-- Custom Theme Style -->
-    <link th:href="@{/custom/css/custom.min.css}" rel="stylesheet">
+    <link th:href="@{/custom/css/custom.css}" rel="stylesheet">
 </head>
 
 <body class="nav-md">
@@ -59,28 +46,30 @@
                 <!-- sidebar menu -->
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                     <div class="menu_section">
-                        <hr/>
                         <ul class="nav side-menu">
                             <li url="/admin/home"><a><i class="fa fa-home"></i> 首页 </a>
                             </li>
-                            <li url="/admin/customer"><a><i class="fa fa-edit"></i> 客户管理 </a>
+                            <li url="/admin/customer"><a><i class="fa fa-edit"></i> 客户 </a>
                             </li>
-                            <li url="/admin/order"><a><i class="fa fa-desktop"></i> 订单管理 </a>
-                            </li>
-
-                            <li url="/admin/notice"><a><i class="fa fa-table"></i> 公告管理 </a></li>
-
-                            <li url="/admin/activity"><a><i class="fa fa-table"></i> 活动管理 </a></li>
-
-                            <li url="/admin/service"><a><i class="fa fa-table"></i> 套系管理 </a></li>
-
-                            <li><a><i class="fa fa-table"></i> 相册管理 <span class="fa fa-chevron-down"></span></a>
+                            <li><a><i class="fa fa-desktop"></i> 订单 <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="tables.html">Tables</a></li>
-                                    <li><a href="tables_dynamic.html">Table Dynamic</a></li>
+                                    <li url="/admin/checkOrder"><a>管理订单</a></li>
+                                    <li url="/admin/addOrder"><a>添加订单</a></li>
                                 </ul>
                             </li>
-                            <li><a><i class="fa fa-bar-chart-o"></i> 管理员 <span
+
+                            <li url="/admin/notice"><a><i class="fa fa-table"></i> 公告 </a></li>
+
+                            <li url="/admin/activity"><a><i class="fa fa-table"></i> 活动 </a></li>
+
+                            <li url="/admin/service"><a><i class="fa fa-table"></i> 套系 </a></li>
+                            <li url="/admin/commodity"><a><i class="fa fa-table"></i> 商品 </a></li>
+
+                            <li url="/admin/photo"><a><i class="fa fa-table"></i> 相册 </span></a>
+                            </li>
+
+
+                            <li><a><i class="fa fa-bar-chart-o"></i> 用户 <span
                                     class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li url="/admin/role"><a>角色管理</a></li>
@@ -165,36 +154,18 @@
 <script th:src="@{/vendors/jquery/dist/jquery.min.js}"></script>
 <!-- Bootstrap -->
 <script th:src="@{/vendors/bootstrap/dist/js/bootstrap.min.js}"></script>
-<!-- FastClick -->
-<script th:src="@{/vendors/fastclick/lib/fastclick.js}"></script>
-<!-- NProgress -->
-<script th:src="@{/vendors/nprogress/nprogress.js}"></script>
-<!-- Chart.js -->
-<script th:src="@{/vendors/Chart.js/dist/Chart.min.js}"></script>
-<!-- jQuery Sparklines -->
-<script th:src="@{/vendors/jquery-sparkline/dist/jquery.sparkline.min.js}"></script>
-<!-- gauge.js -->
-<script th:src="@{/vendors/gauge.js/dist/gauge.min.js}"></script>
-<!-- Flot -->
-<script th:src="@{/vendors/Flot/jquery.flot.js}"></script>
-<script th:src="@{/vendors/Flot/jquery.flot.pie.js}"></script>
-<script th:src="@{/vendors/Flot/jquery.flot.time.js}"></script>
-<script th:src="@{/vendors/Flot/jquery.flot.stack.js}"></script>
-<script th:src="@{/vendors/Flot/jquery.flot.resize.js}"></script>
-<!-- Flot plugins -->
-<script th:src="@{/vendors/flot.orderbars/js/jquery.flot.orderBars.js}"></script>
-<script th:src="@{/vendors/flot-spline/js/jquery.flot.spline.min.js}"></script>
-<script th:src="@{/vendors/flot.curvedlines/curvedLines.js}"></script>
+
 <!-- DateJS -->
 <script th:src="@{/vendors/DateJS/build/date.js}"></script>
 <!-- bootstrap-daterangepicker -->
 <script th:src="@{/vendors/moment/min/moment.min.js}"></script>
 <script th:src="@{/vendors/bootstrap-daterangepicker/daterangepicker.js}"></script>
 
-<script th:src="@{/vendors/iCheck/icheck.min.js}"></script>
+<!-- jQuery Smart Wizard -->
+<script th:src="@{/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js}"></script>
 
 <!-- Custom Theme Scripts -->
-<script th:src="@{/custom/js/custom.min.js}"></script>
+<script th:src="@{/custom/js/custom.js}"></script>
 <script th:src="@{/custom/js/admin.js}"></script>
 </body>
 </html>

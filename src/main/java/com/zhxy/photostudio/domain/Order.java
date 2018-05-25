@@ -13,9 +13,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    // 订单时间
-    private Long orderTime;
-
     // 拍摄时间
     private Long takePhotoTime;
 
@@ -25,9 +22,6 @@ public class Order {
     // 取片时间
     private Long pickPhotoTime;
 
-    // 备注
-    private String remark;
-
     @ManyToOne
     @JoinColumn(name = "service_id")
     private ServicePackage servicePackage;
@@ -35,5 +29,13 @@ public class Order {
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    // 订单时间
+    private Long createTime;
+
+    private Long updateTime;
+
+    // 备注
+    private String remark;
 
 }

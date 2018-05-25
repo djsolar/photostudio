@@ -1729,31 +1729,90 @@ if (typeof NProgress != 'undefined') {
 	      
 			if( typeof ($.fn.daterangepicker) === 'undefined'){ return; }
 			console.log('init_daterangepicker_single_call');
-		   
-			$('#single_cal1').daterangepicker({
-			  singleDatePicker: true,
-			  singleClasses: "picker_1"
-			}, function(start, end, label) {
-			  console.log(start.toISOString(), end.toISOString(), label);
-			});
-			$('#single_cal2').daterangepicker({
-			  singleDatePicker: true,
-			  singleClasses: "picker_2"
-			}, function(start, end, label) {
-			  console.log(start.toISOString(), end.toISOString(), label);
-			});
-			$('#single_cal3').daterangepicker({
-			  singleDatePicker: true,
-			  singleClasses: "picker_3"
-			}, function(start, end, label) {
-			  console.log(start.toISOString(), end.toISOString(), label);
-			});
-			$('#single_cal4').daterangepicker({
-			  singleDatePicker: true,
-			  singleClasses: "picker_4"
-			}, function(start, end, label) {
-			  console.log(start.toISOString(), end.toISOString(), label);
-			});
+
+            $('#single_cal4').daterangepicker({
+                "singleDatePicker": true,
+                "autoApply": true,
+                "locale": {
+                    "format": "YYYY-MM-DD",
+                    "separator": " - ",
+                    "applyLabel": "Apply",
+                    "cancelLabel": "Cancel",
+                    "fromLabel": "From",
+                    "toLabel": "To",
+                    "customRangeLabel": "Custom",
+                    "weekLabel": "W",
+                    "daysOfWeek": [
+                        "日",
+                        "一",
+                        "二",
+                        "三",
+                        "四",
+                        "五",
+                        "六"
+                    ],
+                    "monthNames": [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ],
+                    "firstDay": 1
+                },
+                "opens": "right"
+            }, function(start, end, label) {
+                console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            });
+
+            $('#weedingDate').daterangepicker({
+                "singleDatePicker": true,
+                "autoApply": true,
+                "locale": {
+                    "format": "YYYY-MM-DD",
+                    "separator": " - ",
+                    "applyLabel": "Apply",
+                    "cancelLabel": "Cancel",
+                    "fromLabel": "From",
+                    "toLabel": "To",
+                    "customRangeLabel": "Custom",
+                    "weekLabel": "W",
+                    "daysOfWeek": [
+                        "日",
+                        "一",
+                        "二",
+                        "三",
+                        "四",
+                        "五",
+                        "六"
+                    ],
+                    "monthNames": [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ],
+                    "firstDay": 1
+                },
+                "opens": "right"
+            }, function(start, end, label) {
+                console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            });
   
   
 		}
@@ -5006,40 +5065,40 @@ if (typeof NProgress != 'undefined') {
 	   
 	$(document).ready(function() {
 				
-		init_sparklines();
-		init_flot_chart();
+		// init_sparklines();
+		// init_flot_chart();
 		init_sidebar();
-		init_wysiwyg();
-		init_InputMask();
-		init_JQVmap();
-		init_cropper();
-		init_knob();
-		init_IonRangeSlider();
-		init_ColorPicker();
-		init_TagsInput();
-		init_parsley();
-		init_daterangepicker();
-		init_daterangepicker_right();
+		//init_wysiwyg();
+		// init_InputMask();
+		// init_JQVmap();
+		// init_cropper();
+		// init_knob();
+		// init_IonRangeSlider();
+		// init_ColorPicker();
+		// init_TagsInput();
+		// init_parsley();
+		// init_daterangepicker();
+		// init_daterangepicker_right();
 		init_daterangepicker_single_call();
-		init_daterangepicker_reservation();
+		// init_daterangepicker_reservation();
 		init_SmartWizard();
-		init_EasyPieChart();
-		init_charts();
-		init_echarts();
-		init_morris_charts();
-		init_skycons();
-		init_select2();
+		// init_EasyPieChart();
+		//init_charts();
+		// init_echarts();
+		// init_morris_charts();
+		// init_skycons();
+		// init_select2();
 		init_validator();
 		init_DataTables();
-		init_chart_doughnut();
-		init_gauge();
-		init_PNotify();
-		init_starrr();
-		init_calendar();
-		init_compose();
-		init_CustomNotification();
-		init_autosize();
-		init_autocomplete();
+		// init_chart_doughnut();
+		// init_gauge();
+		// init_PNotify();
+		// init_starrr();
+		// init_calendar();
+		// init_compose();
+		// init_CustomNotification();
+		// init_autosize();
+		// init_autocomplete();
 				
 	});	
 	

@@ -13,10 +13,6 @@
     <link th:href="@{/vendors/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet">
     <!-- Font Awesome -->
     <link th:href="@{/vendors/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
-    <!-- NProgress -->
-    <link th:href="@{/vendors/nprogress/nprogress.css}" rel="stylesheet">
-    <!-- iCheck -->
-    <link th:href="@{/vendors/iCheck/skins/flat/green.css}" rel="stylesheet">
 
     <!-- bootstrap-daterangepicker -->
     <link th:href="@{/vendors/bootstrap-daterangepicker/daterangepicker.css}" rel="stylesheet">
@@ -144,11 +140,9 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">结婚日期 <span class="required">*</span>
                         </label>
                         <div class="col-md-8 col-sm-8 col-xs-12">
-                            <div class="xdisplay_inputx form-group has-feedback">
-                                <input type="text" class="form-control has-feedback-left" style="padding-left: 54px;" id="single_cal4" placeholder="First Name" aria-describedby="inputSuccess2Status4">
-                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true" ></span>
-                                <span id="inputSuccess2Status4" class="sr-only">(success)</span>
-                            </div>
+                            <input type="text" class="form-control has-feedback-left" id="single_cal4" placeholder="First Name" aria-describedby="inputSuccess2Status4">
+                            <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true" ></span>
+                            <span id="inputSuccess2Status4" class="sr-only">(success)</span>
                         </div>
                     </div>
 
@@ -165,22 +159,27 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(function () {
+        $("#cancelAddCustomer").click(function () {
+            $("#addCustomerModal").modal("hide")
+        });
+
+        $("#saveCustomer").click(function () {
+
+        });
+    });
+</script>
 
 <!-- jQuery -->
 <script th:src="@{/vendors/jquery/dist/jquery.min.js}"></script>
 <!-- Bootstrap -->
 <script th:src="@{/vendors/bootstrap/dist/js/bootstrap.min.js}"></script>
-<!-- FastClick -->
-<script th:src="@{/vendors/fastclick/lib/fastclick.js}"></script>
-<!-- NProgress -->
-<script th:src="@{/vendors/nprogress/nprogress.js}"></script>
-<!-- iCheck -->
-<script th:src="@{/vendors/iCheck/icheck.min.js}"></script>
 <!-- bootstrap-daterangepicker -->
 <script th:src="@{/vendors/moment/min/moment.min.js}"></script>
 <script th:src="@{/vendors/bootstrap-daterangepicker/daterangepicker.js}"></script>
 
 <!-- Custom Theme Scripts -->
-<script th:src="@{/custom/js/custom.min.js}"></script>
+<script th:src="@{/custom/js/custom.js}"></script>
 </body>
 </html>
