@@ -1,13 +1,11 @@
 package com.zhxy.photostudio.service;
 
 import com.zhxy.photostudio.domain.Customer;
-import com.zhxy.photostudio.util.EntityPage;
-
-import java.util.List;
+import com.zhxy.photostudio.util.DataTableViewPage;
 
 public interface CustomerService {
 
-    EntityPage<Customer> findAll();
+    DataTableViewPage<Customer> findAll();
 
     Customer save(Customer customer);
 

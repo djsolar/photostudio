@@ -166,6 +166,12 @@
 
 <!-- Custom Theme Scripts -->
 <script th:src="@{/custom/js/custom.js}"></script>
-<script th:src="@{/custom/js/admin.js}"></script>
+<script>
+    $("li[url]").click(function () {
+        alert("zhouyiran");
+        var url = $(this).attr("url");
+        $("div.right_col").load(url);
+    });
+</script>
 </body>
 </html>

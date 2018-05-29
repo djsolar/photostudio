@@ -2,13 +2,15 @@ package com.zhxy.photostudio.controller;
 
 import com.zhxy.photostudio.domain.Commodity;
 import com.zhxy.photostudio.service.CommodityService;
+import com.zhxy.photostudio.util.DataTableViewPage;
 import com.zhxy.photostudio.util.ResponseBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(value = "admin")
@@ -87,5 +89,23 @@ public class AdminController {
     public ResponseBean<String> addCommodity(Commodity commodity) {
         commodityService.saveCommodity(commodity);
         return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "commodity/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseBean<String> deleteCommodity(Integer id) {
+        commodityService.deleteCommodity(id);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "commodity/list")
+    @ResponseBody
+    public DataTableViewPage<Commodity> listCommodity(HttpServletRequest request) {
+        int start = Integer.parseInt(request.getParameter("start"));
+        int length = Integer.parseInt(request.getParameter("length"));
+        String searchValue = request.getParameter("search[value]");
+        System.out.println("searchValue: " + searchValue);
+        int page = start / length;
+        return commodityService.listCommodity(page, length, searchValue);
     }
 }

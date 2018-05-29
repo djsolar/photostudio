@@ -3,7 +3,7 @@ package com.zhxy.photostudio.service.impl;
 import com.zhxy.photostudio.domain.Customer;
 import com.zhxy.photostudio.repository.CustomerRepository;
 import com.zhxy.photostudio.service.CustomerService;
-import com.zhxy.photostudio.util.EntityPage;
+import com.zhxy.photostudio.util.DataTableViewPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,14 +18,9 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Override
-    public EntityPage<Customer> findAll() {
-        List<Customer> customers = customerRepository.findAll();
-        EntityPage<Customer> entityPage = new EntityPage<>();
-        entityPage.setData(customers);
-        entityPage.setDraw(1);
-        entityPage.setRecordsTotal(customers.size());
-        entityPage.setRecordsFiltered(customers.size());
-        return entityPage;
+    public DataTableViewPage<Customer> findAll() {
+
+        return null;
     }
 
     @Override
