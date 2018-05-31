@@ -34,9 +34,67 @@ function extendDateFun() {
     };
 }
 
+function clear_form() {
+    $("#serviceForm")[0].reset();
+    $("input[name='id']").val("");
+}
+
 function init_modal_handler() {
     $("#addPackage").click(function () {
+        clear_form();
         $("#addServicePackageModal").modal("show");
+    });
+
+    $("#editPackage").click(function () {
+        var rowDatas = serviceTable.rows(".selected").data();
+        if (rowDatas.length === 0) {
+            return;
+        }
+        var data = rowDatas[0];
+        $("#addServicePackageModal input[name='name']").val(data.name);
+        $("#addServicePackageModal input[name='clothesNumber']").val(data.clothesNumber);
+        $("#addServicePackageModal input[name='photoNumber']").val(data.photoNumber);
+        $("#addServicePackageModal input[name='pickPhotoNumber']").val(data.pickPhotoNumber);
+        $("#addServicePackageModal input[name='price']").val(data.price);
+        $("#addServicePackageModal input[name='remark']").val(data.remark);
+        $("#addServicePackageModal input[name='id']").val(data.id);
+        $("#addServicePackageModal").modal("show");
+    });
+
+    $("#deletePackage").click(function () {
+        var rowDatas = serviceTable.rows(".selected").data();
+        if (rowDatas.length === 0) {
+            return;
+        }
+        var data = rowDatas[0];
+        $.ajax({
+            url: "/admin/serivce/delete",
+            type: "post",
+            dataType: "json",
+            data: {"id": data.id},
+            success: function (data) {
+                $.ajax.reload(null, false);
+            }
+        });
+    });
+    
+    $("#saveServicePackage").click(function () {
+       $.ajax({
+           url: "/admin/service/add",
+           type: "post",
+           dataType: "json",
+           data: $("#serviceForm").serialize(),
+           success: function (data) {
+               if (data.status) {
+                   serviceTable.ajax.reload(null, false);
+                   $('#addServicePackageModal').modal("hide");
+               }
+           }
+       });
+    });
+
+    $("#cancelAddServicePackage").click(function () {
+        $("#addServicePackageModal").modal("hide");
     });
 }
 
@@ -79,7 +137,6 @@ function refreshServicePackage() {
         }, "aoColumns": [
             {
                 "sTitle": "序号",
-                "sClass": "dt-center",
                 "bSortable": false,
                 "sWidth": "4%",
                 "data": null,
@@ -88,47 +145,40 @@ function refreshServicePackage() {
             {
                 "sTitle": "套系名称",
                 "mDataProp": "name",
-                "sClass": "dt-center",
                 "bSortable": false,
                 "sWidth": "12%"
             }, {
                 "sTitle": "衣服套数",
                 "mDataProp": "clothesNumber",
-                "sClass": "dt-center",
                 "bSortable": false,
-                "sWidth": "4%"
+                "sWidth": "8%"
             }, {
                 "sTitle": "拍摄照片数",
                 "mDataProp": "photoNumber",
-                "sClass": "dt-center",
                 "bSortable": false,
-                "sWidth": "4%"
+                "sWidth": "8%"
             },
             {
                 "sTitle": "可选照片数",
                 "mDataProp": "pickPhotoNumber",
-                "sClass": "dt-center",
                 "bSortable": false,
-                "sWidth": "4%"
+                "sWidth": "8%"
             },
             {
                 "sTitle": "套系金额",
                 "mDataProp": "price",
-                "sClass": "dt-center",
                 "bSortable": false,
                 "sWidth": "6%"
             },
             {
                 "sTitle": "备注",
                 "mDataProp": "remark",
-                "sClass": "dt-center",
                 "bSortable": false,
                 "sWidth": "10%"
             },
             {
                 "sTitle": "更新时间",
                 "mDataProp": "updateTime",
-                "sClass": "dt-center",
                 "bSortable": false,
                 "sWidth": "10%",
                 render: function (data, type, row) {
