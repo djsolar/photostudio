@@ -1,7 +1,11 @@
 package com.zhxy.photostudio.controller;
 
 import com.zhxy.photostudio.domain.Commodity;
+import com.zhxy.photostudio.domain.Customer;
+import com.zhxy.photostudio.domain.ServicePackage;
 import com.zhxy.photostudio.service.CommodityService;
+import com.zhxy.photostudio.service.CustomerService;
+import com.zhxy.photostudio.service.ServicePackageService;
 import com.zhxy.photostudio.util.DataTableViewPage;
 import com.zhxy.photostudio.util.ResponseBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,12 @@ public class AdminController {
 
     @Autowired
     private CommodityService commodityService;
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private ServicePackageService servicePackageService;
 
     @RequestMapping(value = "index")
     public String index() {
@@ -59,9 +69,59 @@ public class AdminController {
         return "admin_service";
     }
 
+    @RequestMapping(value = "/service/add", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> addService(ServicePackage servicePackage) {
+        servicePackageService.save(servicePackage);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/service/delete", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> deleteService(Integer id) {
+        servicePackageService.delete(id);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/service/list")
+    @ResponseBody
+    public DataTableViewPage<ServicePackage> listService(HttpServletRequest request) {
+        int start = Integer.parseInt(request.getParameter("start"));
+        int length = Integer.parseInt(request.getParameter("length"));
+        String searchValue = request.getParameter("search[value]");
+        System.out.println("searchValue: " + searchValue);
+        int page = start / length;
+        return servicePackageService.listService(page, length, searchValue);
+    }
+
     @RequestMapping(value = "customer")
     public String customer() {
         return "admin_customer";
+    }
+
+    @RequestMapping(value = "/customer/add", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> addCustomer(Customer customer) {
+        customerService.save(customer);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/customer/delete")
+    @ResponseBody
+    public ResponseBean<String> deleteCustomer(Integer id) {
+        customerService.delete(id);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/customer/list")
+    @ResponseBody
+    public DataTableViewPage<Customer> listCustomer(HttpServletRequest request) {
+        int start = Integer.parseInt(request.getParameter("start"));
+        int length = Integer.parseInt(request.getParameter("length"));
+        String searchValue = request.getParameter("search[value]");
+        System.out.println("searchValue: " + searchValue);
+        int page = start / length;
+        return customerService.listCustomer(page, length, searchValue);
     }
 
     @RequestMapping(value = "account")

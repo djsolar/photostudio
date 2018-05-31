@@ -28,7 +28,9 @@ public class CommodityServiceImpl implements CommodityService {
 
     @Override
     public Commodity saveCommodity(Commodity commodity) {
-        commodity.setCreateTime(System.currentTimeMillis());
+        if (commodity.getId() == null) {
+            commodity.setCreateTime(System.currentTimeMillis());
+        }
         commodity.setUpdateTime(System.currentTimeMillis());
         return commodityRepository.saveAndFlush(commodity);
     }

@@ -25,7 +25,8 @@ public class Customer {
     @Column(length = 256)
     private String address;
 
-    private Long weedingDate;
+    @Column(length = 256)
+    private String weedingDate;
 
     private Long updateTime;
 

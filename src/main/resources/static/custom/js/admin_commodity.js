@@ -2,6 +2,8 @@
 function init_add_commodity_handler() {
 
     $("#addCommodity").click(function () {
+        clear_form();
+        $("#myModalLabel").text("添加商品");
         $("#addCommodityModal").modal("show");
     });
 
@@ -24,6 +26,7 @@ function init_add_commodity_handler() {
     });
 
     $("#editCommodity").click(function () {
+        $("#myModalLabel").text("编辑商品");
         var rowData = commodityTable.rows('.selected').data();
         if (rowData.length === 0) {
             return;
@@ -46,7 +49,7 @@ function init_add_commodity_handler() {
             success: function (data) {
                 if (data.status) {
                     $("#addCommodityModal").modal("hide");
-                    $("#commodityForm")[0].reset();
+                    clear_form();
                     commodityTable.ajax.reload(null, false);
                 } else {
 
@@ -54,6 +57,11 @@ function init_add_commodity_handler() {
             }
         });
     });
+}
+
+function clear_form() {
+    $("#commodityForm")[0].reset();
+    $("#addCommodityModal input[name='id']").val("");
 }
 
 function init_modal_handler() {

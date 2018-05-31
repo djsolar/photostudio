@@ -26,14 +26,16 @@ public class ServicePackage {
     // 可选照片数
     private Integer pickPhotoNumber;
 
-    private String imageInfo;
-
     // 套餐价格
     private Integer price;
 
     // 备注
-    @Column(length = 256)
+    @Column(length = 1024)
     private String remark;
+
+    private Long updateTime;
+
+    private Long createTime;
 
     // 可拍摄的地点
     @ManyToMany(cascade = CascadeType.ALL)

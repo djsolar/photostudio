@@ -32,7 +32,6 @@ public class CustomerServiceImplTest {
             customer.setAddress("Beijing");
             customer.setCreateTime(System.currentTimeMillis());
             customer.setUpdateTime(System.currentTimeMillis());
-            customer.setWeedingDate(System.currentTimeMillis() + 100000);
             customerService.save(customer);
         }
     }

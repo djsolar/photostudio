@@ -13,7 +13,8 @@
     <link th:href="@{/vendors/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet">
     <!-- Font Awesome -->
     <link th:href="@{/vendors/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
-
+    <!-- Datatables -->
+    <link th:href="@{/custom/css/dataTables.bootstrap.css}" rel="stylesheet">
     <!-- bootstrap-daterangepicker -->
     <link th:href="@{/vendors/bootstrap-daterangepicker/daterangepicker.css}" rel="stylesheet">
 
@@ -27,17 +28,6 @@
         <div class="title_left">
             <h3>客户列表</h3>
         </div>
-
-        <div class="title_right">
-            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="row">
@@ -46,29 +36,27 @@
             <div class="x_panel">
                 <div class="x_title">
                     <div class="x_content">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-md"><i class="fa fa-plus"></i>  添加 </button>
+                        <button id="addCustomer" type="button" class="btn btn-primary" data-toggle="modal"><i class="fa fa-plus"></i>  添加 </button>
 
-                        <button type="button" class="btn btn-success"><i class="fa fa-edit"></i>  编辑 </button>
+                        <button id="editCustomer" type="button" class="btn btn-success"><i class="fa fa-edit"></i>  编辑 </button>
 
-                        <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i>  删除 </button>
+                        <button id="deleteCustomer" type="button" class="btn btn-danger"><i class="fa fa-trash"></i>  删除 </button>
 
                     </div>
                     <div class="clearfix"></div>
                 </div>
 
                 <div class="x_content">
-                    <div class="table-responsive">
-                        <table class="table table-striped jambo_table">
+                    <div>
+                        <table id="customerTable" class="table table-striped jambo_table">
                             <thead>
                             <tr class="headings">
-                                <th>
-
-                                </th>
-                                <th class="column-title"> 男方姓名 </th>
-                                <th class="column-title"> 女方姓名 </th>
+                                <th class="column-title">序号</th>
+                                <th class="column-title"> 先生姓名 </th>
+                                <th class="column-title"> 小姐姓名 </th>
                                 <th class="column-title"> 电话 </th>
                                 <th class="column-title"> 地址 </th>
-                                <th class="column-title"> 结婚日期 </th>
+                                <th class="column-title"> 佳期 </th>
                                 <th class="column-title"> 更新时间 </th>
                             </tr>
                             </thead>
@@ -106,33 +94,33 @@
                 <h4 class="modal-title" id="myModalLabel">添加客户</h4>
             </div>
             <div class="modal-body">
-                <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                <form id="customerForm" data-parsley-validate class="form-horizontal form-label-left">
 
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">男方姓名 <span class="required">*</span>
                         </label>
                         <div class="col-md-8 col-sm-8 col-xs-12">
-                            <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="first-name" required="required" name="manName" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">女方姓名 <span class="required">*</span>
                         </label>
                         <div class="col-md-8 col-sm-8 col-xs-12">
-                            <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="last-name" name="womenName" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="telephone" class="control-label col-md-3 col-sm-3 col-xs-12">手机号码 <span class="required">*</span></label>
                         <div class="col-md-8 col-sm-8 col-xs-12">
-                            <input id="telephone" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                            <input id="telephone" class="form-control col-md-7 col-xs-12" type="text" name="phone">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="address" class="control-label col-md-3 col-sm-3 col-xs-12">家庭住址 <span class="required">*</span></label>
                         <div class="col-md-8 col-sm-8 col-xs-12">
-                            <input id="address" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
+                            <input id="address" class="form-control col-md-7 col-xs-12" type="text" name="address">
                         </div>
                     </div>
 
@@ -140,36 +128,27 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">结婚日期 <span class="required">*</span>
                         </label>
                         <div class="col-md-8 col-sm-8 col-xs-12">
-                            <input type="text" class="form-control has-feedback-left" id="single_cal4" placeholder="First Name" aria-describedby="inputSuccess2Status4">
+                            <input type="text" class="form-control has-feedback-left" name="weedingDate" id="single_cal4" aria-describedby="inputSuccess2Status4">
                             <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true" ></span>
                             <span id="inputSuccess2Status4" class="sr-only">(success)</span>
                         </div>
                     </div>
-
-                    <div class="ln_solid"></div>
-                    <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                            <button class="btn btn-primary" type="button" id="cancelAddCustomer">取消</button>
-                            <button type="submit" class="btn btn-success" id="saveCustomer">提交</button>
-                        </div>
-                    </div>
+                    <input type="hidden"  name="id">
 
                 </form>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-7">
+                        <button id="cancelAddCustomer" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button id="saveCustomer" type="button" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $(function () {
-        $("#cancelAddCustomer").click(function () {
-            $("#addCustomerModal").modal("hide")
-        });
-
-        $("#saveCustomer").click(function () {
-
-        });
-    });
-</script>
 
 <!-- jQuery -->
 <script th:src="@{/vendors/jquery/dist/jquery.min.js}"></script>
@@ -178,8 +157,12 @@
 <!-- bootstrap-daterangepicker -->
 <script th:src="@{/vendors/moment/min/moment.min.js}"></script>
 <script th:src="@{/vendors/bootstrap-daterangepicker/daterangepicker.js}"></script>
+<!-- Datatables -->
+<script th:src="@{/custom/js/dataTables.bootstrap.js}"></script>
+<script th:src="@{/custom/js/jquery.dataTables.js}"></script>
 
 <!-- Custom Theme Scripts -->
 <script th:src="@{/custom/js/custom.js}"></script>
+<script th:src="@{/custom/js/admin_customer.js}"></script>
 </body>
 </html>

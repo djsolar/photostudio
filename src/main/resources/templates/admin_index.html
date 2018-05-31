@@ -15,7 +15,7 @@
     <link th:href="@{/vendors/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
 
     <!-- Custom Theme Style -->
-    <link th:href="@{/custom/css/custom.css}" rel="stylesheet">
+    <link th:href="@{/custom/css/custom.min.css}" rel="stylesheet">
 </head>
 
 <body class="nav-md">
@@ -57,8 +57,6 @@
                                     <li url="/admin/addOrder"><a>添加订单</a></li>
                                 </ul>
                             </li>
-
-                            <li url="/admin/notice"><a><i class="fa fa-table"></i> 公告 </a></li>
 
                             <li url="/admin/activity"><a><i class="fa fa-table"></i> 活动 </a></li>
 
@@ -168,7 +166,6 @@
 <script th:src="@{/custom/js/custom.js}"></script>
 <script>
     $("li[url]").click(function () {
-        alert("zhouyiran");
         var url = $(this).attr("url");
         $("div.right_col").load(url);
     });

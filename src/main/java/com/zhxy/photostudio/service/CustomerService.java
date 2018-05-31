@@ -5,7 +5,7 @@ import com.zhxy.photostudio.util.DataTableViewPage;
 
 public interface CustomerService {
 
-    DataTableViewPage<Customer> findAll();
+    DataTableViewPage<Customer> listCustomer(int page, int length, String searchValue);
 
     Customer save(Customer customer);
 
