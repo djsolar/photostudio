@@ -2,10 +2,13 @@ package com.zhxy.photostudio.controller;
 
 import com.zhxy.photostudio.domain.Commodity;
 import com.zhxy.photostudio.domain.Customer;
+import com.zhxy.photostudio.domain.Order;
 import com.zhxy.photostudio.domain.ServicePackage;
 import com.zhxy.photostudio.service.CommodityService;
 import com.zhxy.photostudio.service.CustomerService;
+import com.zhxy.photostudio.service.OrderService;
 import com.zhxy.photostudio.service.ServicePackageService;
+import com.zhxy.photostudio.service.impl.OrderServiceImpl;
 import com.zhxy.photostudio.util.DataTableViewPage;
 import com.zhxy.photostudio.util.ResponseBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,9 @@ public class AdminController {
 
     @Autowired
     private ServicePackageService servicePackageService;
+
+    @Autowired
+    private OrderService orderService;
 
     @RequestMapping(value = "index")
     public String index() {
@@ -52,6 +58,13 @@ public class AdminController {
     @RequestMapping(value = "order")
     public String order() {
         return "admin_order";
+    }
+
+    @RequestMapping(value = "/order/add")
+    @ResponseBody
+    public ResponseBean<String> orderAdd(Order order) {
+        orderService.saveOrder(order);
+        return new ResponseBean<>(true);
     }
 
     @RequestMapping(value = "photo")

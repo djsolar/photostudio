@@ -1,6 +1,7 @@
 var customerTable;
 $(function () {
     extendDateFun();
+    init_daterangepicker_single_call();
     init_modal_handler();
     customerTable = refreshCustomer();
 });
@@ -41,6 +42,7 @@ function refreshCustomer() {
         aLengthMenu: [10],//设置一页展示10条记录
         "bLengthChange": false,//屏蔽tables的一页展示多少条记录的下拉列表
         info: false,
+        destroy: true,
         "oLanguage": {  //对表格国际化
             "sLengthMenu": "每页显示 _MENU_条",
             "sZeroRecords": "没有找到符合条件的数据",
@@ -204,4 +206,98 @@ function init_modal_handler() {
             }
         });
     });
+}
+
+function init_daterangepicker_single_call() {
+
+    if (typeof ($.fn.daterangepicker) === 'undefined') {
+        return;
+    }
+    console.log('init_daterangepicker_single_call');
+
+    $('#single_cal4').daterangepicker({
+        "singleDatePicker": true,
+        "autoApply": true,
+        "locale": {
+            "format": "YYYY-MM-DD",
+            "separator": " - ",
+            "applyLabel": "Apply",
+            "cancelLabel": "Cancel",
+            "fromLabel": "From",
+            "toLabel": "To",
+            "customRangeLabel": "Custom",
+            "weekLabel": "W",
+            "daysOfWeek": [
+                "日",
+                "一",
+                "二",
+                "三",
+                "四",
+                "五",
+                "六"
+            ],
+            "monthNames": [
+                "一月",
+                "二月",
+                "三月",
+                "四月",
+                "五月",
+                "六月",
+                "七月",
+                "八月",
+                "九月",
+                "十月",
+                "十一月",
+                "十二月"
+            ],
+            "firstDay": 1
+        },
+        "opens": "right"
+    }, function (start, end, label) {
+        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    });
+
+    $('#weedingDate').daterangepicker({
+        "singleDatePicker": true,
+        "autoApply": true,
+        "locale": {
+            "format": "YYYY-MM-DD",
+            "separator": " - ",
+            "applyLabel": "Apply",
+            "cancelLabel": "Cancel",
+            "fromLabel": "From",
+            "toLabel": "To",
+            "customRangeLabel": "Custom",
+            "weekLabel": "W",
+            "daysOfWeek": [
+                "日",
+                "一",
+                "二",
+                "三",
+                "四",
+                "五",
+                "六"
+            ],
+            "monthNames": [
+                "一月",
+                "二月",
+                "三月",
+                "四月",
+                "五月",
+                "六月",
+                "七月",
+                "八月",
+                "九月",
+                "十月",
+                "十一月",
+                "十二月"
+            ],
+            "firstDay": 1
+        },
+        "opens": "right"
+    }, function (start, end, label) {
+        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    });
+
+
 }

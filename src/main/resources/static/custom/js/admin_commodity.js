@@ -78,6 +78,7 @@ function refreshCommodity() {
         aLengthMenu: [10],//设置一页展示10条记录
         "bLengthChange": false,//屏蔽tables的一页展示多少条记录的下拉列表
         info: false,
+        destroy: true,
         "oLanguage": {  //对表格国际化
             "sLengthMenu": "每页显示 _MENU_条",
             "sZeroRecords": "没有找到符合条件的数据",

@@ -42,7 +42,7 @@
  * and open the template in the editor.
  */
 
-var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
+// var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $BODY = $('body'),
     $MENU_TOGGLE = $('#menu_toggle'),
     $SIDEBAR_MENU = $('#sidebar-menu'),
@@ -70,8 +70,19 @@ function init_sidebar() {
 
         $RIGHT_COL.css('min-height', contentHeight);
     };
+    $SIDEBAR_MENU.find('li').on('click', function(ev) {
+        if ($(this).is(".active")) {
 
-    $SIDEBAR_MENU.find('a').on('click', function (ev) {
+        } else {
+            $SIDEBAR_MENU.find('li').removeClass("active");
+            var url = $(this).attr("url");
+            $RIGHT_COL.load(url);
+            $(this).addClass("active");
+            setContentHeight();
+        }
+    });
+
+    /*$SIDEBAR_MENU.find('a').on('click', function (ev) {
         console.log('clicked - sidebar_menu');
         var $li = $(this).parent();
 
@@ -97,7 +108,7 @@ function init_sidebar() {
                 setContentHeight();
             });
         }
-    });
+    });*/
 
 // toggle small or large menu
     $MENU_TOGGLE.on('click', function () {
@@ -121,13 +132,13 @@ function init_sidebar() {
     });
 
     // check active menu
-    $SIDEBAR_MENU.find('a[href="' + CURRENT_URL + '"]').parent('li').addClass('current-page');
+    // $SIDEBAR_MENU.find('a[href="' + CURRENT_URL + '"]').parent('li').addClass('current-page');
 
-    $SIDEBAR_MENU.find('a').filter(function () {
+    /*$SIDEBAR_MENU.find('a').filter(function () {
         return this.href == CURRENT_URL;
     }).parent('li').addClass('current-page').parents('ul').slideDown(function () {
         setContentHeight();
-    }).parent().addClass('active');
+    }).parent().addClass('active');*/
 
     // recompute content when resizing
     $(window).smartresize(function () {
@@ -2145,27 +2156,6 @@ function init_daterangepicker_reservation() {
     });
 
 }
-
-/* SMART WIZARD */
-
-function init_SmartWizard() {
-
-    if (typeof ($.fn.smartWizard) === 'undefined') {
-        return;
-    }
-    console.log('init_SmartWizard');
-
-    $('#wizard').smartWizard();
-
-    $('#wizard_verticle').smartWizard({
-        transitionEffect: 'slide'
-    });
-
-    $('.buttonNext').addClass('btn btn-success');
-    $('.buttonPrevious').addClass('btn btn-primary');
-    $('.buttonFinish').addClass('btn btn-default');
-
-};
 
 
 /* VALIDATOR */
@@ -5406,17 +5396,17 @@ $(document).ready(function () {
     // init_parsley();
     // init_daterangepicker();
     // init_daterangepicker_right();
-    init_daterangepicker_single_call();
+    // init_daterangepicker_single_call();
     // init_daterangepicker_reservation();
-    init_SmartWizard();
+    // init_SmartWizard();
     // init_EasyPieChart();
     //init_charts();
     // init_echarts();
     // init_morris_charts();
     // init_skycons();
     // init_select2();
-    init_validator();
-    init_DataTables();
+    // init_validator();
+    // init_DataTables();
     // init_chart_doughnut();
     // init_gauge();
     // init_PNotify();
@@ -5428,8 +5418,5 @@ $(document).ready(function () {
     // init_autocomplete();
 });
 
-function init_menu_li() {
-
-}
 	
 
