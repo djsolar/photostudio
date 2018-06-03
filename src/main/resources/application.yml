@@ -8,5 +8,8 @@ spring:
     password: zhouyiran
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
+upload:
+  photo:
+    path: /Users/zhouyiran/Downloads/photo/

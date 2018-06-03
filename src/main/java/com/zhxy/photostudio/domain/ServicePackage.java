@@ -1,5 +1,6 @@
 package com.zhxy.photostudio.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -42,10 +43,4 @@ public class ServicePackage {
     @JoinTable(name = "service_place", joinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "place_id", referencedColumnName = "id"))
     private List<TakePhotoPlace> takePhotoPlaces;
-
-    // 套餐包含的商品
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "service_place", joinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "commodity_id", referencedColumnName = "id"))
-    private List<Commodity> commodities;
 }

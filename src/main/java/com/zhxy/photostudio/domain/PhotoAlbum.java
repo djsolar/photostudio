@@ -18,6 +18,10 @@ public class PhotoAlbum {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    private String caption;
+
+    private String description;
+
     // 类型
     private String category;
 

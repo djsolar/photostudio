@@ -1,5 +1,6 @@
 package com.zhxy.photostudio.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,21 +15,26 @@ public class Order {
     private Integer id;
 
     // 拍摄时间
-    private Long takePhotoTime;
+    private String takePhotoTime;
 
     // 选片时间
-    private Long selectPhotoTime;
+    private String selectPhotoTime;
 
     // 取片时间
-    private Long pickPhotoTime;
+    private String pickPhotoTime;
 
     @ManyToOne
     @JoinColumn(name = "service_id")
     private ServicePackage servicePackage;
 
+    @JsonBackReference
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    private Integer price;
+
+    private Integer earnest;
 
     // 订单时间
     private Long createTime;

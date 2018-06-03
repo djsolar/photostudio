@@ -1,23 +1,20 @@
 package com.zhxy.photostudio.controller;
 
-import com.zhxy.photostudio.domain.Commodity;
-import com.zhxy.photostudio.domain.Customer;
-import com.zhxy.photostudio.domain.Order;
-import com.zhxy.photostudio.domain.ServicePackage;
-import com.zhxy.photostudio.service.CommodityService;
-import com.zhxy.photostudio.service.CustomerService;
-import com.zhxy.photostudio.service.OrderService;
-import com.zhxy.photostudio.service.ServicePackageService;
-import com.zhxy.photostudio.service.impl.OrderServiceImpl;
+import com.zhxy.photostudio.domain.*;
+import com.zhxy.photostudio.service.*;
 import com.zhxy.photostudio.util.DataTableViewPage;
+import com.zhxy.photostudio.util.OrderView;
 import com.zhxy.photostudio.util.ResponseBean;
+import com.zhxy.photostudio.util.ServiceView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "admin")
@@ -34,6 +31,9 @@ public class AdminController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private AlbumPhotoService albumPhotoService;
 
     @RequestMapping(value = "index")
     public String index() {
@@ -60,16 +60,54 @@ public class AdminController {
         return "admin_order";
     }
 
-    @RequestMapping(value = "/order/add")
+    @RequestMapping(value = "/order/add", method = {RequestMethod.POST})
     @ResponseBody
-    public ResponseBean<String> orderAdd(Order order) {
-        orderService.saveOrder(order);
+    public ResponseBean<String> orderAdd(Order order, Integer customerId, Integer serviceId) {
+        orderService.saveOrder(order, customerId, serviceId);
         return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/order/delete", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> orderDelete(Integer id) {
+        orderService.delete(id);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/order/get", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<OrderView> getOrder(Integer orderId) {
+        OrderView orderView = orderService.getOrder(orderId);
+        return new ResponseBean<>(orderView, true);
+    }
+
+    @RequestMapping(value = "/order/list")
+    @ResponseBody
+    public DataTableViewPage<OrderView> listOrder(HttpServletRequest request) {
+        int start = Integer.parseInt(request.getParameter("start"));
+        int length = Integer.parseInt(request.getParameter("length"));
+        String searchValue = request.getParameter("search[value]");
+        System.out.println("searchValue: " + searchValue);
+        int page = start / length;
+        return orderService.listOrder(page, length, searchValue);
     }
 
     @RequestMapping(value = "photo")
     public String photo() {
         return "admin_photo";
+    }
+    @RequestMapping(value = "/photo/upload", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> uploadPhoto(MultipartHttpServletRequest request) {
+        albumPhotoService.upload(request);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/photoAlbum/add")
+    @ResponseBody
+    public ResponseBean<String> addPhotoAlbum(PhotoAlbum photoAlbum) {
+        albumPhotoService.save(photoAlbum);
+        return new ResponseBean<>(true);
     }
 
     @RequestMapping(value = "role")
@@ -105,6 +143,12 @@ public class AdminController {
         System.out.println("searchValue: " + searchValue);
         int page = start / length;
         return servicePackageService.listService(page, length, searchValue);
+    }
+
+    @RequestMapping(value = "/service/all")
+    @ResponseBody
+    public ResponseBean<List<ServiceView>> listAllService() {
+        return new ResponseBean<>(servicePackageService.listAllService(), true);
     }
 
     @RequestMapping(value = "customer")

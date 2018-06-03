@@ -4,6 +4,7 @@ import com.zhxy.photostudio.domain.ServicePackage;
 import com.zhxy.photostudio.repository.ServicePackageRepository;
 import com.zhxy.photostudio.service.ServicePackageService;
 import com.zhxy.photostudio.util.DataTableViewPage;
+import com.zhxy.photostudio.util.ServiceView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -58,6 +61,20 @@ public class ServicePackageServiceImpl implements ServicePackageService {
         dataTableViewPage.setRecordsTotal(servicePackagePage.getTotalElements());
         dataTableViewPage.setRecordsFiltered(servicePackagePage.getTotalElements());
         return dataTableViewPage;
+    }
+
+    @Override
+    public List<ServiceView> listAllService() {
+        List<ServicePackage> servicePackages = servicePackageRepository.findAll();
+        List<ServiceView> serviceViews = new ArrayList<>();
+        for(ServicePackage sp : servicePackages) {
+            ServiceView sv = new ServiceView();
+            sv.setId(sp.getId());
+            sv.setName(sp.getName());
+            sv.setPrice(sp.getPrice());
+            serviceViews.add(sv);
+        }
+        return serviceViews;
     }
 
     @Override

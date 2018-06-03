@@ -86,19 +86,19 @@ function refreshCustomer() {
                 "mDataProp": "manName",
                 "sClass": "dt-center",
                 "bSortable": false,
-                "sWidth": "12%"
+                "sWidth": "10%"
             }, {
                 "sTitle": "小姐姓名",
                 "mDataProp": "womenName",
                 "sClass": "dt-center",
                 "bSortable": false,
-                "sWidth": "12%"
+                "sWidth": "10%"
             }, {
                 "sTitle": "电话号码",
                 "mDataProp": "phone",
                 "sClass": "dt-center",
                 "bSortable": false,
-                "sWidth": "12%"
+                "sWidth": "10%"
             },
             {
                 "sTitle": "地址",
@@ -114,7 +114,7 @@ function refreshCustomer() {
                 "bSortable": false,
                 "sWidth": "10%",
                 render: function (data, type, row) {
-                    return (new Date(data)).Format("yyyy-MM-dd hh:mm:ss");
+                    return (new Date(data)).Format("yyyy-MM-dd");
                 }
             },
             {
@@ -122,9 +122,24 @@ function refreshCustomer() {
                 "mDataProp": "updateTime",
                 "sClass": "dt-center",
                 "bSortable": false,
-                "sWidth": "10%",
+                "sWidth": "12%",
                 render: function (data, type, row) {
                     return (new Date(data)).Format("yyyy-MM-dd hh:mm:ss");
+                }
+            },
+            {
+                "sTitle": "操作",
+                "mDataProp": "order",
+                "sClass": "dt-center",
+                "bSortable": false,
+                "sWidth": "10%",
+                render: function (data, type, row) {
+                    if (data == null) {
+                        return "<button customerId=\"" + row.id + "\" type=\"button\" class=\"btn btn-primary btn-xs\">  添加订单 </button>";
+                    } else {
+                        return "<button orderId= \"" + data.id + "\" type=\"button\" class=\"btn btn-success btn-xs\"> 查看订单 </button>";
+
+                    }
                 }
             }
         ]
@@ -138,19 +153,83 @@ function refreshCustomer() {
                 $(this).addClass("selected");
             }
         });
+        $("button[customerId]").click(function () {
+            $("#addOrderModal").modal("show");
+            var customerId = $(this).attr("customerId");
+            $.ajax({
+                url: "/admin/service/all",
+                success: function (data) {
+                    console.log(data);
+                    if (data.status) {
+                        clear_order_form();
+                        $("#addOrderModal input[name='customerId']").val(customerId);
+                        var $SELECT = $("select.select2_multiple");
+                        $SELECT.empty();
+                        for(var i = 0; i < data.entity.length; i++) {
+                            var e = data.entity[i];
+                            $SELECT.append($("<option></option>").text(e.name).attr("value", e.id).attr("price", e.price));
+                        }
+                    }
+                }
+            })
+        });
+        $("button[orderId]").click(function () {
+            $("#addOrderModal").modal("show");
+            clear_order_form();
+            $.ajax({
+                url: "/admin/order/get",
+                type: "post",
+                dataType: "json",
+                data: {"orderId": $(this).attr("orderId")},
+                success: function (data1) {
+                    if (data1.status) {
+                        var entity = data1.entity;
+                        $.ajax({
+                            url: "/admin/service/all",
+                            success: function (data) {
+                                if (data.status) {
+                                    var $SELECT = $("select.select2_multiple");
+                                    $SELECT.empty();
+                                    for(var i = 0; i < data.entity.length; i++) {
+                                        var e = data.entity[i];
+                                        $SELECT.append($("<option></option>").text(e.name).attr("value", e.id).attr("price", e.price));
+                                    }
+                                    $("#addOrderModal input[name='takePhotoTime']").val(entity.takePhotoTime);
+                                    $("#addOrderModal input[name='selectPhotoTime']").val(entity.selectPhotoTime);
+                                    $("#addOrderModal input[name='pickPhotoTime']").val(entity.pickPhotoTime);
+                                    $("#addOrderModal select.select2_multiple").val(entity.serviceId);
+                                    $("#addOrderModal input[name='remark']").val(entity.remark);
+                                    $("#addOrderModal input[name='price']").val(entity.price);
+                                    $("#addOrderModal input[name='earnest']").val(entity.earnest);
+                                    $("#addOrderModal input[name='customerId']").val(entity.customerId);
+                                    $("#addOrderModal input[name='id']").val(entity.id);
+                                    $("#addOrderModal textarea").text(entity.remark);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
     } );
     return table;
 }
 
-function clear_form() {
+function clear_custom_form() {
     $("#customerForm")[0].reset();
     $("#addCustomerModal input[name='id']").val("");
+}
+
+function clear_order_form() {
+    $("#orderForm")[0].reset();
+    $("#addOrderModal input[name='customerId']").val("");
+    $("#addOrderModal input[name='orderId']").val("");
 }
 
 function init_modal_handler() {
     $("#addCustomer").click(function () {
         $("#myModalLabel").text("添加客户");
-        clear_form();
+        clear_custom_form();
         $("#addCustomerModal").modal("show");
     });
     
@@ -171,7 +250,7 @@ function init_modal_handler() {
             }
         })
     });
-
+    
     $("#editCustomer").click(function () {
         var rowData = customerTable.rows(".selected").data();
         if (rowData.length === 0)
@@ -200,9 +279,33 @@ function init_modal_handler() {
             success: function (data) {
                 if (data.status) {
                     $("#addCustomerModal").modal("hide");
-                    clear_form();
+                    clear_custom_form();
                     customerTable.ajax.reload(null, false);
                 }
+            }
+        });
+    });
+
+    $("select.select2_multiple").change(function () {
+        var options=$("select.select2_multiple option:selected");
+        console.log(options.attr("price"));
+        $("input[name='price']").val(options.attr("price"));
+    });
+
+    $("#cancelOrder").click(function () {
+        $("#addOrderModal").modal("hide");
+    });
+
+    $("#saveOrder").click(function () {
+        $.ajax({
+            url: "/admin/order/add",
+            type: "post",
+            dataType: "json",
+            data: $("#orderForm").serialize(),
+            success: function (data) {
+                clear_order_form();
+                $("#addOrderModal").modal("hide");
+                customerTable.ajax.reload(null, false);
             }
         });
     });
@@ -215,11 +318,11 @@ function init_daterangepicker_single_call() {
     }
     console.log('init_daterangepicker_single_call');
 
-    $('#single_cal4').daterangepicker({
+    var option = {
         "singleDatePicker": true,
         "autoApply": true,
         "locale": {
-            "format": "YYYY-MM-DD",
+        "format": "YYYY-MM-DD",
             "separator": " - ",
             "applyLabel": "Apply",
             "cancelLabel": "Cancel",
@@ -228,76 +331,34 @@ function init_daterangepicker_single_call() {
             "customRangeLabel": "Custom",
             "weekLabel": "W",
             "daysOfWeek": [
-                "日",
-                "一",
-                "二",
-                "三",
-                "四",
-                "五",
-                "六"
-            ],
+            "日",
+            "一",
+            "二",
+            "三",
+            "四",
+            "五",
+            "六"
+        ],
             "monthNames": [
-                "一月",
-                "二月",
-                "三月",
-                "四月",
-                "五月",
-                "六月",
-                "七月",
-                "八月",
-                "九月",
-                "十月",
-                "十一月",
-                "十二月"
-            ],
+            "一月",
+            "二月",
+            "三月",
+            "四月",
+            "五月",
+            "六月",
+            "七月",
+            "八月",
+            "九月",
+            "十月",
+            "十一月",
+            "十二月"
+        ],
             "firstDay": 1
-        },
+    },
         "opens": "right"
-    }, function (start, end, label) {
+    }
+
+    $("input[aria-describedby='inputSuccess2Status4']").daterangepicker(option, function (start, end, label) {
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
     });
-
-    $('#weedingDate').daterangepicker({
-        "singleDatePicker": true,
-        "autoApply": true,
-        "locale": {
-            "format": "YYYY-MM-DD",
-            "separator": " - ",
-            "applyLabel": "Apply",
-            "cancelLabel": "Cancel",
-            "fromLabel": "From",
-            "toLabel": "To",
-            "customRangeLabel": "Custom",
-            "weekLabel": "W",
-            "daysOfWeek": [
-                "日",
-                "一",
-                "二",
-                "三",
-                "四",
-                "五",
-                "六"
-            ],
-            "monthNames": [
-                "一月",
-                "二月",
-                "三月",
-                "四月",
-                "五月",
-                "六月",
-                "七月",
-                "八月",
-                "九月",
-                "十月",
-                "十一月",
-                "十二月"
-            ],
-            "firstDay": 1
-        },
-        "opens": "right"
-    }, function (start, end, label) {
-        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-    });
-
-
 }
