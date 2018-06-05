@@ -4,4 +4,6 @@ import com.zhxy.photostudio.domain.Photo;
 import org.springframework.data.repository.CrudRepository;
 
 public interface PhotoRepository extends CrudRepository<Photo, Integer> {
+
+    Photo findPhotoByMd5Name(String md5Name);
 }

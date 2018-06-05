@@ -7,13 +7,25 @@ import com.zhxy.photostudio.util.OrderView;
 import com.zhxy.photostudio.util.ResponseBean;
 import com.zhxy.photostudio.util.ServiceView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -34,6 +46,12 @@ public class AdminController {
 
     @Autowired
     private AlbumPhotoService albumPhotoService;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @RequestMapping(value = "index")
     public String index() {
@@ -59,6 +77,42 @@ public class AdminController {
     public String order() {
         return "admin_order";
     }
+
+    @RequestMapping(value = "/login", method = {RequestMethod.GET})
+    public String login(Model model, String error, String logout) {
+        if (error != null) {
+            model.addAttribute("error", "账户名或者密码错误");
+        }
+        if (logout != null){
+            model.addAttribute("message", "账户已经退出");
+        }
+        return "admin_login";
+    }
+
+    @RequestMapping(value = "/loginVerify", method = {RequestMethod.POST})
+    public ModelAndView login(String username, String password, HttpServletRequest request) {
+        username = username.trim();
+        ModelAndView modelAndView = new ModelAndView();
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+            modelAndView.addObject("message", "密码或用户名不能为空");
+            modelAndView.setView(new RedirectView("/admin/login"));
+            return modelAndView;
+        }
+        try {
+            UsernamePasswordAuthenticationToken requestToke = new UsernamePasswordAuthenticationToken(username, password);
+            Authentication authentication = authenticationManager.authenticate(requestToke);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            HttpSession httpSession = request.getSession();
+            httpSession.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+            modelAndView.setView(new RedirectView("/admin/index"));
+        } catch (AuthenticationException e) {
+            modelAndView.addObject("message", "密码或用户名错误");
+            modelAndView.setView(new RedirectView("/admin/login"));
+        }
+
+        return modelAndView;
+    }
+
 
     @RequestMapping(value = "/order/add", method = {RequestMethod.POST})
     @ResponseBody
@@ -96,18 +150,11 @@ public class AdminController {
     public String photo() {
         return "admin_photo";
     }
-    @RequestMapping(value = "/photo/upload", method = {RequestMethod.POST})
+    @RequestMapping(value = "/photoAlbum/upload", method = {RequestMethod.POST})
     @ResponseBody
-    public ResponseBean<String> uploadPhoto(MultipartHttpServletRequest request) {
-        albumPhotoService.upload(request);
-        return new ResponseBean<>(true);
-    }
-
-    @RequestMapping(value = "/photoAlbum/add")
-    @ResponseBody
-    public ResponseBean<String> addPhotoAlbum(PhotoAlbum photoAlbum) {
-        albumPhotoService.save(photoAlbum);
-        return new ResponseBean<>(true);
+    public ResponseBean<String> uploadPhoto(String caption, String category, String description,
+                                            @RequestParam("photoThumbnail") MultipartFile photoThumbnail, @RequestParam("photo") MultipartFile photo) {
+        return albumPhotoService.upload(caption, category, description, photoThumbnail, photo);
     }
 
     @RequestMapping(value = "role")

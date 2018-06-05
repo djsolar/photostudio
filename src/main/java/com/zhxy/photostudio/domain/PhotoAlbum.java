@@ -29,11 +29,16 @@ public class PhotoAlbum {
     private Boolean top;
 
     // 相册合集
-    @ManyToMany
-    @JoinTable(name = "album_photo", joinColumns ={@JoinColumn(name = "album_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "photo_id", referencedColumnName = "id")})
-    private List<Photo> photos;
+    @ManyToOne
+    @JoinColumn(name = "thumbnail_id")
+    private Photo thumbnailPhoto;
+
+    @ManyToOne
+    @JoinColumn(name = "content_photo_id")
+    private Photo contentPhoto;
 
     // 更新时间
     private Long updateTime;
+
+    private Long createTime;
 }

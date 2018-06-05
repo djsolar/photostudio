@@ -32,11 +32,11 @@
                 <!-- menu profile quick info -->
                 <div class="profile clearfix">
                     <div class="profile_pic">
-                        <img src="/images/img.jpg" alt="..." class="img-circle profile_img">
+                        <img th:src="${session.SPRING_SECURITY_CONTEXT.authentication.principal.avatar}" alt="..." class="img-circle profile_img">
                     </div>
                     <div class="profile_info">
                         <span>欢迎,</span>
-                        <h2>John Doe</h2>
+                        <h2 th:text="${session.SPRING_SECURITY_CONTEXT.authentication.principal.nickName}">John Doe</h2>
                     </div>
                 </div>
                 <!-- /menu profile quick info -->
@@ -71,7 +71,7 @@
                 </div>
                 <!-- /sidebar menu -->
 
-                <!-- /menu footer buttons -->
+               <!-- &lt;!&ndash; /menu footer buttons &ndash;&gt;
                 <div class="sidebar-footer hidden-small">
                     <a data-toggle="tooltip" data-placement="top" title="Settings">
                         <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -85,7 +85,7 @@
                     <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
                         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                     </a>
-                </div>
+                </div>-->
                 <!-- /menu footer buttons -->
             </div>
         </div>
@@ -102,7 +102,7 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="images/img.jpg" alt="">John Doe
+                                <img th:src="${session.SPRING_SECURITY_CONTEXT.authentication.principal.avatar}" alt=""><span th:text="${session.SPRING_SECURITY_CONTEXT.authentication.principal.nickName}"> John Doe<span/>
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -131,7 +131,7 @@
         <!-- footer content -->
         <footer>
             <div class="pull-right">
-                Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+                <p>©2018 All Rights Reserved. xx影楼管理系统</p>
             </div>
             <div class="clearfix"></div>
         </footer>

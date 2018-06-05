@@ -1,13 +1,12 @@
 package com.zhxy.photostudio.domain;
 
 import lombok.Data;
-
 import javax.persistence.*;
 
 @Entity
-@Table(name = "t_photo")
+@Table(name = "t_authority")
 @Data
-public class Photo {
+public class Authority{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,5 +14,6 @@ public class Photo {
 
     private String name;
 
-    private String md5Name;
+    private Integer code;
+
 }

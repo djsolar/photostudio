@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -24,7 +24,7 @@
         <div class="col-md-12">
             <div class="x_panel">
                 <div class="x_title">
-                    <button id="addPhoto" type="button" class="btn btn-primary"><i class="fa fa-plus"></i>  添加 </button>
+                    <button id="addPhoto" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> 添加</button>
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
@@ -239,23 +239,44 @@
             <div class="modal-body">
                 <form id="photoAlbumForm" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
-                        <label for="caption" class="control-label col-md-3 col-sm-3 col-xs-12"> 相册标题 <span class="required">*</span></label>
+                        <label for="caption" class="control-label col-md-3 col-sm-3 col-xs-12"> 相册标题 <span
+                                class="required">*</span></label>
                         <div class="col-md-8 col-sm-8 col-xs-12">
                             <input id="caption" class="form-control col-md-7 col-xs-12" name="caption" type="text">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="category" class="control-label col-md-3 col-sm-3 col-xs-12"> 相册类型 <span class="required">*</span></label>
+                        <label for="category" class="control-label col-md-3 col-sm-3 col-xs-12"> 相册类型 <span
+                                class="required">*</span></label>
                         <div class="col-md-8 col-sm-8 col-xs-12">
                             <input id="category" class="form-control col-md-7 col-xs-12" name="category" type="text">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="description" class="control-label col-md-3 col-sm-3 col-xs-12"> 相册描述 <span class="required">*</span></label>
+                        <label for="description" class="control-label col-md-3 col-sm-3 col-xs-12"> 相册描述 <span
+                                class="required">*</span></label>
                         <div class="col-md-8 col-sm-8 col-xs-12">
-                            <input id="description" class="form-control col-md-7 col-xs-12" name="description" type="text">
+                            <input id="description" class="form-control col-md-7 col-xs-12" name="description"
+                                   type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="photoThumbnail" class="control-label col-md-3 col-sm-3 col-xs-12"> 相片缩略图 <span
+                                class="required">*</span></label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input id="photoThumbnail" class="form-control col-md-7 col-xs-12" name="photoThumbnail"
+                                   type="file">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="photo" class="control-label col-md-3 col-sm-3 col-xs-12"> 相片大图 <span
+                                class="required">*</span></label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input id="photo" class="form-control col-md-7 col-xs-12 " name="photo" type="file">
                         </div>
                     </div>
 
@@ -278,16 +299,42 @@
     <!-- /.modal -->
 </div>
 
+<script id="photoList" type="text/html">
+
+    <div class="row">
+        {{each entity}}
+            <div class="col-md-55">
+                <div class="thumbnail">
+                    <div class="image view view-first">
+                        <img style="width: 100%; display: block;" src="{{$value.thumbnail}}" alt="image"/>
+                        <div class="mask">
+                            <p>{{$value.category}}</p>
+                            <div class="tools tools-bottom" id="{{$value.id}}">
+                                <a href="#"><i class="fa fa-link"></i></a>
+                                <a href="#"><i class="fa fa-pencil"></i></a>
+                                <a href="#"><i class="fa fa-times"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="caption">
+                        <p>{{$value.caption}}</p>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+
+</script>
+
 <script th:src="@{/vendors/jquery/dist/jquery.min.js}"></script>
 <!-- Bootstrap -->
 <script th:src="@{/vendors/bootstrap/dist/js/bootstrap.min.js}"></script>
 <!-- FastClick -->
 <script th:src="@{/vendors/fastclick/lib/fastclick.js}"></script>
 
-<script th:src="@{/custom/js/jquery.fileupload.js}"></script>
-<script th:src="@{/custom/js/jquery.fileupload-image.js}"></script>
-<script th:src="@{/custom/js/jquery.iframe-transport.js}"></script>
 <!-- Custom Theme Scripts -->
+<script th:src="@{/custom/js/template-web.js}"></script>
+<script th:src="@{/custom/js/jquery.form.js}"></script>
 <script th:src="@{/custom/js/admin_photo.js}"></script>
 </body>
 </html>

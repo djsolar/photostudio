@@ -2,13 +2,15 @@ package com.zhxy.photostudio.service;
 
 import com.zhxy.photostudio.domain.PhotoAlbum;
 import com.zhxy.photostudio.util.FileMeta;
+import com.zhxy.photostudio.util.ResponseBean;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.List;
 
 public interface AlbumPhotoService {
 
-    List<FileMeta> upload(MultipartHttpServletRequest request);
+    ResponseBean<String> upload(String caption, String category, String description, MultipartFile photoThumbnail, MultipartFile photo);
 
     PhotoAlbum save(PhotoAlbum photoAlbum);
 

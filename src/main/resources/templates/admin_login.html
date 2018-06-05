@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title> 登录 </title>
+
+    <!-- Bootstrap -->
+    <link th:href="@{/vendors/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link th:href="@{/vendors/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
+    <!-- NProgress -->
+    <link th:href="@{/vendors/nprogress/nprogress.css}" rel="stylesheet">
+    <!-- Animate.css -->
+    <link th:href="@{/vendors/animate.css/animate.min.css}" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link th:href="@{/custom/css/custom.min.css}" rel="stylesheet">
+</head>
+
+<body class="login">
+<div>
+
+    <div class="login_wrapper">
+        <div class="animate form login_form">
+            <section class="login_content">
+                <form action="/admin/loginVerify" method="post">
+                    <h1>登录</h1>
+                    <div>
+                        <input type="text" class="form-control" placeholder="用户名" required="" name="username"/>
+                    </div>
+                    <div>
+                        <input type="password" class="form-control" placeholder="密码" required="" name="password"/>
+                    </div>
+                    <div>
+                        <button class="btn btn-success" type="submit">登录</button>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="separator">
+                        <div class="clearfix"></div>
+                        <br />
+
+                        <div>
+                            <h1> 影楼管理系统</h1>
+                            <p>©2018 All Rights Reserved. xx影楼管理系统</p>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

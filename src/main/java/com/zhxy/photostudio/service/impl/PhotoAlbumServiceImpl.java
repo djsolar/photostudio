@@ -1,11 +1,14 @@
 package com.zhxy.photostudio.service.impl;
 
+import com.zhxy.photostudio.domain.Photo;
 import com.zhxy.photostudio.domain.PhotoAlbum;
 import com.zhxy.photostudio.repository.PhotoAlbumRepository;
+import com.zhxy.photostudio.repository.PhotoRepository;
 import com.zhxy.photostudio.service.AlbumPhotoService;
 import com.zhxy.photostudio.util.Config;
 import com.zhxy.photostudio.util.FileMeta;
 import com.zhxy.photostudio.util.MD5Util;
+import com.zhxy.photostudio.util.ResponseBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,8 +30,12 @@ public class PhotoAlbumServiceImpl implements AlbumPhotoService {
     private PhotoAlbumRepository photoAlbumRepository;
 
     @Autowired
+    private PhotoRepository photoRepository;
+
+    @Autowired
     private Config config;
-    @Override
+
+    /*@Override
     public List<FileMeta> upload(MultipartHttpServletRequest request) {
         Iterator<String> itr = request.getFileNames();
         MultipartFile mpf;
@@ -46,6 +53,47 @@ public class PhotoAlbumServiceImpl implements AlbumPhotoService {
         }
 
         return null;
+    }*/
+
+    @Override
+    public ResponseBean<String> upload(String caption, String category, String description, MultipartFile photoThumbnail, MultipartFile photo) {
+        PhotoAlbum photoAlbum = new PhotoAlbum();
+        photoAlbum.setCaption(caption);
+        photoAlbum.setCategory(category);
+        photoAlbum.setDescription(description);
+        try {
+
+            String originalName = photoThumbnail.getOriginalFilename();
+            String suffix = originalName.substring(originalName.lastIndexOf("."));
+            String md5Name = MD5Util.getMd5ByFile(photoThumbnail.getBytes()) + suffix;
+            Photo thumbnail = photoRepository.findPhotoByMd5Name(md5Name);
+            if (thumbnail == null) {
+                FileCopyUtils.copy(photoThumbnail.getBytes(), new File(config.getPhotoPath() + md5Name));
+                thumbnail = new Photo();
+                thumbnail.setMd5Name(md5Name);
+                thumbnail.setName(originalName);
+                photoRepository.save(thumbnail);
+            }
+            originalName = photo.getOriginalFilename();
+            suffix = originalName.substring(originalName.lastIndexOf("."));
+            md5Name = MD5Util.getMd5ByFile(photo.getBytes()) + suffix;
+            Photo bigPhoto = photoRepository.findPhotoByMd5Name(md5Name);
+            if (bigPhoto == null) {
+                FileCopyUtils.copy(photo.getBytes(), new File(config.getPhotoPath() + md5Name));
+                bigPhoto = new Photo();
+                bigPhoto.setName(originalName);
+                bigPhoto.setMd5Name(md5Name);
+                photoRepository.save(bigPhoto);
+            }
+            photoAlbum.setThumbnailPhoto(thumbnail);
+            photoAlbum.setContentPhoto(bigPhoto);
+            photoAlbumRepository.save(photoAlbum);
+            return new ResponseBean<>(true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseBean<>(null, false, e.getMessage());
+        }
     }
 
     @Override
