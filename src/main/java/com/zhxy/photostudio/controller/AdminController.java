@@ -50,6 +50,12 @@ public class AdminController {
     @Autowired
     private ActivityService activityService;
 
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private UserService userService;
+
     @RequestMapping(value = "index")
     public String index() {
         return "admin_index";
@@ -225,6 +231,23 @@ public class AdminController {
         return "admin_role";
     }
 
+    @RequestMapping(value = "/role/list")
+    @ResponseBody
+    public DataTableViewPage<Role> listRole(HttpServletRequest request) {
+        int start = Integer.parseInt(request.getParameter("start"));
+        int length = Integer.parseInt(request.getParameter("length"));
+        String searchValue = request.getParameter("search[value]");
+        System.out.println("searchValue: " + searchValue);
+        int page = start / length;
+        return roleService.listRole(page, length, searchValue);
+    }
+
+    @RequestMapping(value = "/role/all")
+    @ResponseBody
+    public ResponseBean<List<Role>> findAllRole() {
+        return new ResponseBean<>(roleService.findAll(), true);
+    }
+
     @RequestMapping(value = "service")
     public String service() {
         return "admin_service";
@@ -240,8 +263,8 @@ public class AdminController {
     @RequestMapping(value = "/service/delete", method = {RequestMethod.POST})
     @ResponseBody
     public ResponseBean<String> deleteService(Integer id) {
-        boolean success = servicePackageService.delete(id);
-        return new ResponseBean<>(success);
+        servicePackageService.delete(id);
+        return new ResponseBean<>(true);
     }
 
     @RequestMapping(value = "/service/list")
@@ -294,6 +317,31 @@ public class AdminController {
     @RequestMapping(value = "account")
     public String account() {
         return "admin_account";
+    }
+
+    @RequestMapping(value = "/account/list")
+    @ResponseBody
+    public DataTableViewPage<User> listUser(HttpServletRequest request) {
+        int start = Integer.parseInt(request.getParameter("start"));
+        int length = Integer.parseInt(request.getParameter("length"));
+        String searchValue = request.getParameter("search[value]");
+        System.out.println("searchValue: " + searchValue);
+        int page = start / length;
+        return userService.listUser(page, length, searchValue);
+    }
+
+    @RequestMapping(value = "/account/add", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> addUser(User user, Integer roleId) {
+        userService.saveUser(user, roleId);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/account/delete", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> deleteUser(Integer id) {
+        boolean success = userService.deleteUser(id);
+        return new ResponseBean<>(success);
     }
 
     @RequestMapping(value = "addOrder")

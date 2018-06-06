@@ -35,7 +35,13 @@ public class CustomerServiceImpl implements CustomerService {
         Sort sort = new Sort(Sort.Direction.DESC, "updateTime");
         Page<Customer> customerPage;
         if (StringUtils.isEmpty(searchValue)) {
-            customerPage = customerRepository.findAll(PageRequest.of(page, pageSize, sort));
+            Specification<Customer> specification = new Specification<Customer>() {
+                @Override
+                public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.equal(root.get("deleted").as(Boolean.class), false);
+                }
+            };
+            customerPage = customerRepository.findAll(specification, PageRequest.of(page, pageSize, sort));
         } else {
             Specification<Customer> customerSpecification = new Specification<Customer>() {
 
@@ -46,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
                     Predicate p3 = cb.like(root.get("phone").as(String.class), "%" + searchValue + "%");
                     Predicate p4 = cb.like(root.get("address").as(String.class), "%" + searchValue + "%");
                     Predicate p5 = cb.equal(root.get("deleted").as(Boolean.class), false);
-                    return cb.or(p1, p2, p3, p4);
+                    return cb.and(p5, cb.or(p1, p2, p3, p4));
                 }
             };
             customerPage = customerRepository.findAll(customerSpecification, PageRequest.of(page, pageSize, sort));
@@ -62,6 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer save(Customer customer) {
         if (customer.getId() == null) {
+            customer.setDeleted(false);
             customer.setCreateTime(System.currentTimeMillis());
         }
         customer.setUpdateTime(System.currentTimeMillis());

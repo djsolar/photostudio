@@ -25,6 +25,8 @@ public class User implements UserDetails {
 
     private String username;
 
+    private Integer admin;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;

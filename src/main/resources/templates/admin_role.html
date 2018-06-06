@@ -1,10 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Gentelella Alela! | </title>
+
+    <!-- Bootstrap -->
+    <link th:href="@{/vendors/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link th:href="@{/vendors/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
+    <!-- Datatables -->
+    <link th:href="@{/custom/css/dataTables.bootstrap.css}" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link th:href="@{/vendors/bootstrap-daterangepicker/daterangepicker.css}" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link th:href="@{/custom/css/custom.min.css}" rel="stylesheet">
 </head>
-<body>
-<h1>角色管理</h1>
+
+<body class="nav-md">
+<div class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>角色列表</h3>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <div class="x_content">
+                        <button id="addRole" type="button" class="btn btn-primary" data-toggle="modal"><i class="fa fa-plus"></i>  添加 </button>
+
+                        <button id="editRole" type="button" class="btn btn-success"><i class="fa fa-edit"></i>  编辑 </button>
+
+                        <button id="deleteRole" type="button" class="btn btn-danger"><i class="fa fa-trash"></i>  删除 </button>
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="x_content">
+                    <div>
+                        <table id="RoleTable" class="table table-striped table-bordered jambo_table">
+                            <thead>
+                            <tr class="headings">
+                                <th class="column-title">序号</th>
+                                <th class="column-title"> 角色名称 </th>
+                                <th class="column-title"> 更新时间 </th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="addCustomerModal" class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">添加客户</h4>
+            </div>
+            <div class="modal-body">
+                <form id="customerForm" data-parsley-validate class="form-horizontal form-label-left">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">男方姓名 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="first-name" required="required" name="manName" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">女方姓名 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="last-name" name="womenName" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone" class="control-label col-md-3 col-sm-3 col-xs-12">手机号码 <span class="required">*</span></label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input id="telephone" class="form-control col-md-7 col-xs-12" type="text" name="phone">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address" class="control-label col-md-3 col-sm-3 col-xs-12">家庭住址 <span class="required">*</span></label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input id="address" class="form-control col-md-7 col-xs-12" type="text" name="address">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">结婚日期 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" class="form-control has-feedback-left" name="weedingDate" id="single_cal4" aria-describedby="inputSuccess2Status4">
+                            <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true" ></span>
+                            <span id="inputSuccess2Status4" class="sr-only">(success)</span>
+                        </div>
+                    </div>
+                    <input type="hidden"  name="id">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-7">
+                        <button id="cancelAddCustomer" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button id="saveCustomer" type="button" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- jQuery -->
+<script th:src="@{/vendors/jquery/dist/jquery.min.js}"></script>
+<!-- Bootstrap -->
+<script th:src="@{/vendors/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- bootstrap-daterangepicker -->
+<script th:src="@{/vendors/moment/min/moment.min.js}"></script>
+<script th:src="@{/vendors/bootstrap-daterangepicker/daterangepicker.js}"></script>
+<!-- Datatables -->
+<script th:src="@{/custom/js/jquery.dataTables.js}"></script>
+<script th:src="@{/custom/js/dataTables.bootstrap.js}"></script>
+
+<!-- Custom Theme Scripts -->
+<script th:src="@{/custom/js/admin_role.js}"></script>
 </body>
 </html>

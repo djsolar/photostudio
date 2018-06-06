@@ -16,6 +16,10 @@ public class Role {
 
     private String name;
 
+    private Long updateTime;
+
+    private Long createTime;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_authority", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))

@@ -8,12 +8,17 @@ import com.zhxy.photostudio.service.AlbumPhotoService;
 import com.zhxy.photostudio.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -39,6 +44,7 @@ public class PhotoAlbumServiceImpl implements AlbumPhotoService {
         photoAlbum.setCaption(caption);
         photoAlbum.setCategory(category);
         photoAlbum.setDescription(description);
+        photoAlbum.setDeleted(false);
         try {
 
             String originalName = photoThumbnail.getOriginalFilename();
@@ -86,7 +92,7 @@ public class PhotoAlbumServiceImpl implements AlbumPhotoService {
 
     @Override
     public void delete(Integer id) {
-        photoAlbumRepository.deleteById(id);
+        photoAlbumRepository.deletePhotoAlbum(id);
     }
 
     @Override
@@ -96,7 +102,13 @@ public class PhotoAlbumServiceImpl implements AlbumPhotoService {
 
     @Override
     public List<PhotoAlbum> listPhotoAlbum() {
-        return photoAlbumRepository.findAll(new Sort(Sort.Direction.DESC, "top", "updateTime"));
+        Specification<PhotoAlbum> specification = new Specification<PhotoAlbum>() {
+            @Override
+            public Predicate toPredicate(Root<PhotoAlbum> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get("deleted").as(Boolean.class), false);
+            }
+        };
+        return photoAlbumRepository.findAll(specification, new Sort(Sort.Direction.DESC, "top", "updateTime"));
     }
 
     @Override

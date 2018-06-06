@@ -40,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order saveOrder(Order order, Integer customerId, Integer serviceId) {
-
+        order.setDeleted(false);
         ServicePackage servicePackage = servicePackageRepository.getOne(serviceId);
         if (order.getId() != null) {
             Order oldOrder = orderRepository.getOne(order.getId());
@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void delete(Integer id) {
-        orderRepository.deleteById(id);
+        orderRepository.deleteOrder(id);
     }
 
     @Override
@@ -91,7 +91,13 @@ public class OrderServiceImpl implements OrderService {
         Sort sort = new Sort(Sort.Direction.DESC, "updateTime");
         Page<Order> orderPage;
         if (StringUtils.isEmpty(searchValue)) {
-            orderPage = orderRepository.findAll(PageRequest.of(page, pageSize, sort));
+            Specification<Order> specification = new Specification<Order>() {
+                @Override
+                public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.equal(root.get("deleted").as(Boolean.class), false);
+                }
+            };
+            orderPage = orderRepository.findAll(specification, PageRequest.of(page, pageSize, sort));
         } else {
             Specification<Order> orderSpecification = new Specification<Order>() {
 
@@ -101,7 +107,8 @@ public class OrderServiceImpl implements OrderService {
                     Predicate p2 = cb.like(root.join("customer").get("womenName").as(String.class), "%" + searchValue + "%");
                     Predicate p3 = cb.like(root.join("customer").get("phone").as(String.class), "%" + searchValue + "%");
                     Predicate p4 = cb.like(root.join("customer").get("address").as(String.class), "%" + searchValue + "%");
-                    return cb.or(p1, p2, p3, p4);
+                    Predicate p5 = cb.equal(root.get("deleted").as(Boolean.class), false);
+                    return cb.and(p5, cb.or(p1, p2, p3, p4));
                 }
             };
             orderPage = orderRepository.findAll(orderSpecification, PageRequest.of(page, pageSize, sort));

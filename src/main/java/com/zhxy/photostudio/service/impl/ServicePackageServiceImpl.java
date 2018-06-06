@@ -30,6 +30,7 @@ public class ServicePackageServiceImpl implements ServicePackageService {
 
     @Override
     public ServicePackage save(ServicePackage servicePackage) {
+        servicePackage.setDeleted(false);
         if (servicePackage.getId() == null) {
             servicePackage.setCreateTime(System.currentTimeMillis());
         }
@@ -42,7 +43,13 @@ public class ServicePackageServiceImpl implements ServicePackageService {
         Sort sort = new Sort(Sort.Direction.DESC, "updateTime");
         Page<ServicePackage> servicePackagePage;
         if (StringUtils.isEmpty(searchValue)) {
-            servicePackagePage = servicePackageRepository.findAll(PageRequest.of(page, pageSize, sort));
+            Specification<ServicePackage> servicePackageSpecification = new Specification<ServicePackage>() {
+                @Override
+                public Predicate toPredicate(Root<ServicePackage> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    return criteriaBuilder.equal(root.get("deleted"), false);
+                }
+            };
+            servicePackagePage = servicePackageRepository.findAll(servicePackageSpecification, PageRequest.of(page, pageSize, sort));
         } else {
             Specification<ServicePackage> customerSpecification = new Specification<ServicePackage>() {
 
@@ -65,7 +72,13 @@ public class ServicePackageServiceImpl implements ServicePackageService {
 
     @Override
     public List<ServiceView> listAllService() {
-        List<ServicePackage> servicePackages = servicePackageRepository.findAll();
+        Specification<ServicePackage> servicePackageSpecification = new Specification<ServicePackage>() {
+            @Override
+            public Predicate toPredicate(Root<ServicePackage> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get("deleted"), false);
+            }
+        };
+        List<ServicePackage> servicePackages = servicePackageRepository.findAll(servicePackageSpecification);
         List<ServiceView> serviceViews = new ArrayList<>();
         for(ServicePackage sp : servicePackages) {
             ServiceView sv = new ServiceView();
@@ -78,12 +91,7 @@ public class ServicePackageServiceImpl implements ServicePackageService {
     }
 
     @Override
-    public boolean delete(Integer id) {
-        ServicePackage servicePackage = servicePackageRepository.getOne(id);
-        if (servicePackage.getOrders() == null && servicePackage.getOrders().size() == 0) {
-            servicePackageRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void delete(Integer id) {
+        servicePackageRepository.deleteServicePackage(id);
     }
 }
