@@ -10,6 +10,13 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${upload.photo.path}
+  servlet:
+    multipart:
+      max-file-size: 100Mb
+
+
 upload:
   photo:
     path: D:\photo\

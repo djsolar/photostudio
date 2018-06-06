@@ -1,10 +1,189 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <!-- Bootstrap -->
+    <link th:href="@{/vendors/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link th:href="@{/vendors/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link th:href="@{/vendors/bootstrap-daterangepicker/daterangepicker.css}" rel="stylesheet">
+    <!-- Custom styling plus plugins -->
+    <link th:href="@{/custom/css/custom.min.css}" rel="stylesheet">
 </head>
 <body>
-<h1>活动管理</h1>
+<div class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>活动管理</h3>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <button id="addActivity" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> 添加</button>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addActivityModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    添加活动
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form id="activityForm" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <label for="caption" class="control-label col-md-3 col-sm-3 col-xs-12"> 活动主题 <span
+                                class="required">*</span></label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input id="caption" class="form-control col-md-7 col-xs-12" name="caption" type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="control-label col-md-3 col-sm-3 col-xs-12"> 活动描述 <span
+                                class="required">*</span></label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input id="description" class="form-control col-md-7 col-xs-12" name="description" type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="activityThumbnail" class="control-label col-md-3 col-sm-3 col-xs-12"> 活动缩略图 <span
+                                class="required">*</span></label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input id="activityThumbnail" class="form-control col-md-7 col-xs-12" name="activityThumbnail"
+                                   type="file">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="activityPhoto" class="control-label col-md-3 col-sm-3 col-xs-12"> 活动大图 <span
+                                class="required">*</span></label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input id="activityPhoto" class="form-control col-md-7 col-xs-12 " name="activityPhoto" type="file">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12"> 开始日期 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" class="form-control has-feedback-left" name="startDate" id="single_cal4" aria-describedby="inputSuccess2Status4">
+                            <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true" ></span>
+                            <span id="startDate" class="sr-only">(success)</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12"> 结束日期 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" class="form-control has-feedback-left" name="endDate" aria-describedby="inputSuccess2Status4">
+                            <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true" ></span>
+                            <span id="endDate" class="sr-only">(success)</span>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="id">
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button id="cancelActivity" type="button" class="btn btn-default" data-dismiss="modal">
+                    取消
+                </button>
+
+                <button id="saveActivity" type="button" class="btn btn-primary">
+                    确定
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+<div class="modal fade" id="eyeActivityContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    查看活动
+                </h4>
+            </div>
+            <div class="modal-body">
+                <p id="activityDescription"></p>
+                <img id="activityContent" src="" width="100%" style="overflow-y: scroll">
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+<script id="activityList" type="text/html">
+
+    <div class="row">
+        {{each entity activity}}
+        <div class="col-md-55">
+            <div class="thumbnail">
+                <div class="image view view-first">
+                    <img style="width: 100%; display: block;" src="/{{activity.thumbnailPhoto.md5Name}}" alt="image"/>
+                    <div class="mask">
+                        <p>{{activity.startDate}} - {{activity.endDate}}</p>
+                        <div class="tools tools-bottom" id="{{activity.id}}">
+                            <a class="eye"><i class="fa fa-eye"></i></a>
+                            <a class="edit"><i class="fa fa-edit"></i></a>
+                            <a class="delete"><i class="fa fa-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="caption">
+                    <p>{{activity.caption}}</p>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+</script>
+
+<script th:src="@{/vendors/jquery/dist/jquery.min.js}"></script>
+<!-- Bootstrap -->
+<script th:src="@{/vendors/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- FastClick -->
+<script th:src="@{/vendors/fastclick/lib/fastclick.js}"></script>
+
+<!-- bootstrap-daterangepicker -->
+<script th:src="@{/vendors/moment/min/moment.min.js}"></script>
+<script th:src="@{/vendors/bootstrap-daterangepicker/daterangepicker.js}"></script>
+
+<!-- Custom Theme Scripts -->
+<script th:src="@{/custom/js/template-web.js}"></script>
+<script th:src="@{/custom/js/jquery.form.js}"></script>
+<script th:src="@{/custom/js/admin_activity.js}"></script>
 </body>
 </html>

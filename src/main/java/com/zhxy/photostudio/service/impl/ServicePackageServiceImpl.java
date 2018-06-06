@@ -78,7 +78,12 @@ public class ServicePackageServiceImpl implements ServicePackageService {
     }
 
     @Override
-    public void delete(Integer id) {
-        servicePackageRepository.deleteById(id);
+    public boolean delete(Integer id) {
+        ServicePackage servicePackage = servicePackageRepository.getOne(id);
+        if (servicePackage.getOrders() == null && servicePackage.getOrders().size() == 0) {
+            servicePackageRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

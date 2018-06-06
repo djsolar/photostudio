@@ -16,16 +16,25 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String title;
+    private String caption;
 
-    @ManyToOne
+    private String description;
+
+    private String startDate;
+
+    private String endDate;
+
+    private Boolean deleted;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name = "thumbnail_photo")
-    private Photo thumbnail;
+    private Photo thumbnailPhoto;
 
-    @ManyToMany
-    @JoinTable(joinColumns = {@JoinColumn(name = "activity_id", referencedColumnName="id")},
-    inverseJoinColumns = {@JoinColumn(name = "photo_id", referencedColumnName = "id")})
-    private List<Photo> photos;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "detail_photo")
+    private Photo detailPhoto;
 
     private Long updateTime;
+
+    private Long createTime;
 }

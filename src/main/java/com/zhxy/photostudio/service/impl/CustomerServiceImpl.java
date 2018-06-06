@@ -1,7 +1,9 @@
 package com.zhxy.photostudio.service.impl;
 
 import com.zhxy.photostudio.domain.Customer;
+import com.zhxy.photostudio.domain.Order;
 import com.zhxy.photostudio.repository.CustomerRepository;
+import com.zhxy.photostudio.repository.OrderRepository;
 import com.zhxy.photostudio.service.CustomerService;
 import com.zhxy.photostudio.util.DataTableViewPage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
     @Override
     public DataTableViewPage<Customer> listCustomer(int page, int pageSize, String searchValue) {
         Sort sort = new Sort(Sort.Direction.DESC, "updateTime");
@@ -40,6 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
                     Predicate p2 = cb.like(root.get("womenName").as(String.class), "%" + searchValue + "%");
                     Predicate p3 = cb.like(root.get("phone").as(String.class), "%" + searchValue + "%");
                     Predicate p4 = cb.like(root.get("address").as(String.class), "%" + searchValue + "%");
+                    Predicate p5 = cb.equal(root.get("deleted").as(Boolean.class), false);
                     return cb.or(p1, p2, p3, p4);
                 }
             };
@@ -64,6 +70,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void delete(Integer id) {
-        customerRepository.deleteById(id);
+        Customer customer = customerRepository.getOne(id);
+        customerRepository.deleteCustomer(id);
+        Order order = customer.getOrder();
+        if (order != null) {
+            orderRepository.deleteOrder(order.getId());
+        }
     }
 }

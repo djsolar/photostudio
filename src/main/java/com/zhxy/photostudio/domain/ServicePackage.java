@@ -1,10 +1,12 @@
 package com.zhxy.photostudio.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "t_service_package")
@@ -30,6 +32,12 @@ public class ServicePackage {
     // 套餐价格
     private Integer price;
 
+    @OneToMany(mappedBy = "servicePackage", fetch = FetchType.EAGER)
+    @JsonBackReference
+    private Set<Order> orders;
+
+    private Boolean deleted;
+
     // 备注
     @Column(length = 1024)
     private String remark;
@@ -43,4 +51,27 @@ public class ServicePackage {
     @JoinTable(name = "service_place", joinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "place_id", referencedColumnName = "id"))
     private List<TakePhotoPlace> takePhotoPlaces;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ServicePackage)) return false;
+        if (!super.equals(o)) return false;
+        ServicePackage that = (ServicePackage) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getClothesNumber(), that.getClothesNumber()) &&
+                Objects.equals(getPhotoNumber(), that.getPhotoNumber()) &&
+                Objects.equals(getPickPhotoNumber(), that.getPickPhotoNumber()) &&
+                Objects.equals(getPrice(), that.getPrice()) &&
+                Objects.equals(getRemark(), that.getRemark()) &&
+                Objects.equals(getUpdateTime(), that.getUpdateTime()) &&
+                Objects.equals(getCreateTime(), that.getCreateTime());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), getId(), getName(), getClothesNumber(), getPhotoNumber(), getPickPhotoNumber(), getPrice(), getRemark(), getUpdateTime(), getCreateTime());
+    }
 }

@@ -14,5 +14,5 @@ public interface ServicePackageService {
 
     List<ServiceView> listAllService();
 
-    void delete(Integer id);
+    boolean delete(Integer id);
 }

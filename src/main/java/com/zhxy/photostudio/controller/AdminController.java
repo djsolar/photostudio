@@ -2,10 +2,7 @@ package com.zhxy.photostudio.controller;
 
 import com.zhxy.photostudio.domain.*;
 import com.zhxy.photostudio.service.*;
-import com.zhxy.photostudio.util.DataTableViewPage;
-import com.zhxy.photostudio.util.OrderView;
-import com.zhxy.photostudio.util.ResponseBean;
-import com.zhxy.photostudio.util.ServiceView;
+import com.zhxy.photostudio.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,10 +45,10 @@ public class AdminController {
     private AlbumPhotoService albumPhotoService;
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private ActivityService activityService;
 
     @RequestMapping(value = "index")
     public String index() {
@@ -66,6 +63,41 @@ public class AdminController {
     @RequestMapping(value = "activity")
     public String activity() {
         return "admin_activity";
+    }
+
+    @RequestMapping(value = "/activity/add", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> addActivity(Integer id, String caption, String description, String startDate, String endDate, MultipartFile activityThumbnail, MultipartFile activityPhoto) {
+        activityService.save(id, caption, description, startDate, endDate, activityThumbnail, activityPhoto);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/activity/delete", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> deleteActivity(Integer id) {
+        activityService.delete(id);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/activity/list")
+    @ResponseBody
+    public ResponseBean<List<Activity>> listActivity() {
+        List<Activity> activities = activityService.listActivity();
+        return new ResponseBean<>(activities, true);
+    }
+
+    @RequestMapping(value = "/activity/eye", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<ActivityView> findActivityContent(Integer id) {
+        ActivityView activityView = activityService.findActivityContent(id);
+        return new ResponseBean<>(activityView, true);
+    }
+
+    @RequestMapping(value = "/activity/getOne", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<Activity> findActivity(Integer id) {
+        Activity activity = activityService.findActivityById(id);
+        return new ResponseBean<>(activity, true);
     }
 
     @RequestMapping(value = "notice")
@@ -152,9 +184,40 @@ public class AdminController {
     }
     @RequestMapping(value = "/photoAlbum/upload", method = {RequestMethod.POST})
     @ResponseBody
-    public ResponseBean<String> uploadPhoto(String caption, String category, String description,
+    public ResponseBean<String> uploadPhoto(Integer id, String caption, String category, String description,
                                             @RequestParam("photoThumbnail") MultipartFile photoThumbnail, @RequestParam("photo") MultipartFile photo) {
-        return albumPhotoService.upload(caption, category, description, photoThumbnail, photo);
+        return albumPhotoService.upload(id, caption, category, description, photoThumbnail, photo);
+    }
+
+    @RequestMapping(value = "/photoAlbum/delete", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> deletePhotoAlbum(Integer id) {
+        albumPhotoService.delete(id);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/photoAlbum/top", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> updatePhotoAlbumTop(Integer id, Boolean top) {
+        int code = albumPhotoService.top(id, top);
+        System.out.println("code: " + code);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/photoAlbum/list")
+    @ResponseBody
+    public ResponseBean<List<PhotoAlbum>> listPhoto() {
+        return new ResponseBean<>(albumPhotoService.listPhotoAlbum(), true);
+    }
+
+    @RequestMapping(value = "/photoAlbum/eye", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<PhotoAlbumView> eyePhotoContent(Integer id) {
+        PhotoAlbumView photoAlbumView = albumPhotoService.findPhotoAlbumById(id);
+        if (photoAlbumView == null) {
+            return new ResponseBean<>(false);
+        }
+        return new ResponseBean<>(photoAlbumView, true);
     }
 
     @RequestMapping(value = "role")
@@ -177,8 +240,8 @@ public class AdminController {
     @RequestMapping(value = "/service/delete", method = {RequestMethod.POST})
     @ResponseBody
     public ResponseBean<String> deleteService(Integer id) {
-        servicePackageService.delete(id);
-        return new ResponseBean<>(true);
+        boolean success = servicePackageService.delete(id);
+        return new ResponseBean<>(success);
     }
 
     @RequestMapping(value = "/service/list")

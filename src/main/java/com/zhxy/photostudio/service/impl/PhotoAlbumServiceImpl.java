@@ -5,10 +5,7 @@ import com.zhxy.photostudio.domain.PhotoAlbum;
 import com.zhxy.photostudio.repository.PhotoAlbumRepository;
 import com.zhxy.photostudio.repository.PhotoRepository;
 import com.zhxy.photostudio.service.AlbumPhotoService;
-import com.zhxy.photostudio.util.Config;
-import com.zhxy.photostudio.util.FileMeta;
-import com.zhxy.photostudio.util.MD5Util;
-import com.zhxy.photostudio.util.ResponseBean;
+import com.zhxy.photostudio.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -21,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,28 +33,8 @@ public class PhotoAlbumServiceImpl implements AlbumPhotoService {
     @Autowired
     private Config config;
 
-    /*@Override
-    public List<FileMeta> upload(MultipartHttpServletRequest request) {
-        Iterator<String> itr = request.getFileNames();
-        MultipartFile mpf;
-        while (itr.hasNext()) {
-            String fileName = itr.next();
-            mpf = request.getFile(fileName);
-            try {
-                String md5Name = MD5Util.getMd5ByFile(mpf.getBytes());
-                String originalName = mpf.getOriginalFilename();
-                String suffix = originalName.substring(originalName.lastIndexOf("."));
-                FileCopyUtils.copy(mpf.getBytes(), new File(config.getPhotoPath() + md5Name + suffix));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
-    }*/
-
     @Override
-    public ResponseBean<String> upload(String caption, String category, String description, MultipartFile photoThumbnail, MultipartFile photo) {
+    public ResponseBean<String> upload(Integer id, String caption, String category, String description, MultipartFile photoThumbnail, MultipartFile photo) {
         PhotoAlbum photoAlbum = new PhotoAlbum();
         photoAlbum.setCaption(caption);
         photoAlbum.setCategory(category);
@@ -87,6 +65,11 @@ public class PhotoAlbumServiceImpl implements AlbumPhotoService {
             }
             photoAlbum.setThumbnailPhoto(thumbnail);
             photoAlbum.setContentPhoto(bigPhoto);
+            photoAlbum.setTop(false);
+            if (id == null) {
+                photoAlbum.setCreateTime(System.currentTimeMillis());
+            }
+            photoAlbum.setUpdateTime(System.currentTimeMillis());
             photoAlbumRepository.save(photoAlbum);
             return new ResponseBean<>(true);
 
@@ -107,7 +90,25 @@ public class PhotoAlbumServiceImpl implements AlbumPhotoService {
     }
 
     @Override
+    public int top(Integer id, Boolean top) {
+        return photoAlbumRepository.updateTop(id, top);
+    }
+
+    @Override
     public List<PhotoAlbum> listPhotoAlbum() {
-        return photoAlbumRepository.findAll(new Sort(Sort.Direction.DESC, "updateTime"));
+        return photoAlbumRepository.findAll(new Sort(Sort.Direction.DESC, "top", "updateTime"));
+    }
+
+    @Override
+    public PhotoAlbumView findPhotoAlbumById(Integer id) {
+        Optional<PhotoAlbum> photoAlbumOptional = photoAlbumRepository.findById(id);
+        if (photoAlbumOptional.isPresent()) {
+            PhotoAlbum photoAlbum = photoAlbumOptional.get();
+            PhotoAlbumView photoAlbumView = new PhotoAlbumView();
+            photoAlbumView.setImageName(photoAlbum.getContentPhoto().getMd5Name());
+            photoAlbumView.setDescription(photoAlbum.getDescription());
+            return photoAlbumView;
+        }
+        return null;
     }
 }

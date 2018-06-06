@@ -299,25 +299,51 @@
     <!-- /.modal -->
 </div>
 
+<div class="modal fade" id="eyePhotoContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    查看相册
+                </h4>
+            </div>
+            <div class="modal-body">
+                <p id="photoDescription"></p>
+                <img id="photoContent" src="" width="100%" style="overflow-y: scroll">
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
 <script id="photoList" type="text/html">
 
     <div class="row">
-        {{each entity}}
+        {{each entity photoAlbum}}
             <div class="col-md-55">
                 <div class="thumbnail">
                     <div class="image view view-first">
-                        <img style="width: 100%; display: block;" src="{{$value.thumbnail}}" alt="image"/>
+                        <img style="width: 100%; display: block;" src="/{{photoAlbum.thumbnailPhoto.md5Name}}" alt="image"/>
                         <div class="mask">
-                            <p>{{$value.category}}</p>
-                            <div class="tools tools-bottom" id="{{$value.id}}">
-                                <a href="#"><i class="fa fa-link"></i></a>
-                                <a href="#"><i class="fa fa-pencil"></i></a>
-                                <a href="#"><i class="fa fa-times"></i></a>
+                            <p>{{photoAlbum.category}}</p>
+                            <div class="tools tools-bottom" id="{{photoAlbum.id}}" top="{{photoAlbum.top}}">
+                                <a class="eye"><i class="fa fa-eye"></i></a>
+                                {{if photoAlbum.top}}
+                                <a class="top"><i class="fa fa-arrow-up"></i></a>
+                                {{ else }}
+                                <a class="top"><i class="fa fa-arrow-down"></i></a>
+                                {{/if}}
+                                <a class="delete"><i class="fa fa-trash"></i></a>
                             </div>
                         </div>
                     </div>
                     <div class="caption">
-                        <p>{{$value.caption}}</p>
+                        <p>{{photoAlbum.caption}}</p>
                     </div>
                 </div>
             </div>

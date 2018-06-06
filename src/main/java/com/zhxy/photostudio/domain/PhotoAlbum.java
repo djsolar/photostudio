@@ -28,12 +28,14 @@ public class PhotoAlbum {
     // 是否置顶
     private Boolean top;
 
+    private Boolean deleted;
+
     // 相册合集
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name = "thumbnail_id")
     private Photo thumbnailPhoto;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "content_photo_id")
     private Photo contentPhoto;
 
