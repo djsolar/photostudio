@@ -56,6 +56,9 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthorityService authorityService;
+
     @RequestMapping(value = "index")
     public String index() {
         return "admin_index";
@@ -227,7 +230,10 @@ public class AdminController {
     }
 
     @RequestMapping(value = "role")
-    public String role() {
+    public String role(Model model) {
+
+        List<Authority> authorities = authorityService.findAll();
+        model.addAttribute("authorities", authorities);
         return "admin_role";
     }
 
@@ -240,6 +246,27 @@ public class AdminController {
         System.out.println("searchValue: " + searchValue);
         int page = start / length;
         return roleService.listRole(page, length, searchValue);
+    }
+
+    @RequestMapping(value = "/role/add", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> addRole(Integer id, String name, @RequestParam(value = "authorities[]") Integer[] authorities) {
+        roleService.save(id, name, authorities);
+        return new ResponseBean<>(true);
+    }
+
+    @RequestMapping(value = "/role/delete", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> deleteRole(Integer id) {
+        boolean success = roleService.delete(id);
+        return new ResponseBean<>(success);
+    }
+
+    @RequestMapping(value = "/role/getOne", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<Role> getOne(Integer id) {
+        Role role = roleService.findOne(id);
+        return new ResponseBean<>(role, true);
     }
 
     @RequestMapping(value = "/role/all")

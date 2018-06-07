@@ -19,4 +19,4 @@ spring:
 
 upload:
   photo:
-    path: /Users/zhouyiran/Downloads/photo/
+    path: D:\photo\

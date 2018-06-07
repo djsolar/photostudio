@@ -1,7 +1,80 @@
+var roleTable;
 $(function () {
     extendDateFun();
-    refreshRole();
+    roleTable = refreshRole();
+    init_button_handler();
 });
+
+function init_button_handler() {
+    $("#addRole").click(function () {
+        $("#addRoleModal h4#myModalLabel").text("添加角色");
+        $("#addRoleModal").modal("show");
+    });
+    $("#saveRole").click(function () {
+        $.ajax({
+            url: "/admin/role/add",
+            type: "post",
+            dataType: "json",
+            data: $("#roleForm").serialize(),
+            success: function (data) {
+                if (data.status) {
+                    $("#addRoleModal").modal("hide");
+                    $("#roleForm")[0].reset();
+                    roleTable.ajax.reload(null, false);
+                }
+            }
+        });
+    });
+
+    $("#deleteRole").click(function () {
+        var rowData = roleTable.rows(".selected").data();
+        if (rowData.length === 0)
+            return;
+        var id = rowData[0].id;
+        $.ajax({
+            url: "/admin/role/delete",
+            type: "post",
+            dataType: "json",
+            data: {"id": id},
+            success: function (data) {
+                if (data.status) {
+                    roleTable.ajax.reload(null, false);
+                }
+            }
+        });
+    });
+
+    $("#editRole").click(function () {
+        $("#addRoleModal h4#myModalLabel").text("编辑角色");
+        $("#addRoleModal").modal("show");
+        var rowData = roleTable.rows(".selected").data();
+        if (rowData.length === 0)
+            return;
+        var data = rowData[0];
+        $("input[name='name']").val(data.name);
+        for(var i = 0; i < data.authorities.length; i++) {
+            var authority = data.authorities[i];
+            $("input[value='checkbox']").each(function () {
+                var code = $(this).attr("value");
+                if (authority.code === code) {
+                    console.log("相等");
+                    $(this).checked(true);
+                    break;
+                }
+        });
+        }
+        console.log(data);
+        /*$.ajax({
+            url: "/admin/role/getOne",
+            type: "post",
+            dataType: "json",
+            data: {"id": id},
+            success: function (data) {
+
+            }
+        });*/
+    });
+}
 
 function extendDateFun() {
     Date.prototype.Format = function (fmt) { //author: meizz
@@ -63,7 +136,7 @@ function refreshRole() {
         },
         "processing": false,
         "serverSide": true,
-        "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+        "fnCreatedRow": function (nRow, aData, iDataIndex) {
             $(nRow).attr('id', aData.id);
         },
         "ajax": {
@@ -97,7 +170,7 @@ function refreshRole() {
             }
         ]
     });
-    table.on( 'draw', function () {
+    table.on('draw', function () {
         $("#RoleTable tbody tr").click(function () {
             if ($(this).hasClass("selected")) {
                 $(this).removeClass("selected")
@@ -106,6 +179,6 @@ function refreshRole() {
                 $(this).addClass("selected");
             }
         });
-    } );
+    });
     return table;
 }

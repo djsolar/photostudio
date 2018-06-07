@@ -13,6 +13,10 @@
     <link th:href="@{/vendors/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet">
     <!-- Font Awesome -->
     <link th:href="@{/vendors/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
+
+    <!-- iCheck -->
+    <link th:href="@{/vendors/iCheck/skins/flat/green.css}" rel="stylesheet">
+
     <!-- Datatables -->
     <link th:href="@{/custom/css/dataTables.bootstrap.css}" rel="stylesheet">
     <!-- bootstrap-daterangepicker -->
@@ -69,53 +73,31 @@
     </div>
 </div>
 
-<div id="addCustomerModal" class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-hidden="true">
+<div id="addRoleModal" class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">添加客户</h4>
+                <h4 class="modal-title" id="myModalLabel">添加角色</h4>
             </div>
             <div class="modal-body">
-                <form id="customerForm" data-parsley-validate class="form-horizontal form-label-left">
+                <form id="roleForm" data-parsley-validate class="form-horizontal form-label-left">
 
                     <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">男方姓名 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">角色名称 <span class="required">*</span>
                         </label>
                         <div class="col-md-8 col-sm-8 col-xs-12">
-                            <input type="text" id="first-name" required="required" name="manName" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="first-name" required="required" name="name" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">女方姓名 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">分配权限 <span class="required">*</span>
                         </label>
-                        <div class="col-md-8 col-sm-8 col-xs-12">
-                            <input type="text" id="last-name" name="womenName" required="required" class="form-control col-md-7 col-xs-12">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="telephone" class="control-label col-md-3 col-sm-3 col-xs-12">手机号码 <span class="required">*</span></label>
-                        <div class="col-md-8 col-sm-8 col-xs-12">
-                            <input id="telephone" class="form-control col-md-7 col-xs-12" type="text" name="phone">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="address" class="control-label col-md-3 col-sm-3 col-xs-12">家庭住址 <span class="required">*</span></label>
-                        <div class="col-md-8 col-sm-8 col-xs-12">
-                            <input id="address" class="form-control col-md-7 col-xs-12" type="text" name="address">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">结婚日期 <span class="required">*</span>
-                        </label>
-                        <div class="col-md-8 col-sm-8 col-xs-12">
-                            <input type="text" class="form-control has-feedback-left" name="weedingDate" id="single_cal4" aria-describedby="inputSuccess2Status4">
-                            <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true" ></span>
-                            <span id="inputSuccess2Status4" class="sr-only">(success)</span>
+                        <div class="col-md-offset-3 col-md-8 col-sm-8 col-xs-12" id="authority" th:each="authority, authorityStat : ${authorities}">
+                            <input type="checkbox" name="authorities[]" th:value="${authority.code}" class="flat"/> <b th:text="${authority.name}"></b>
+                            <br />
                         </div>
                     </div>
                     <input type="hidden"  name="id">
@@ -125,8 +107,8 @@
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-md-4 col-md-offset-7">
-                        <button id="cancelAddCustomer" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button id="saveCustomer" type="button" class="btn btn-primary">保存</button>
+                        <button id="cancelRole" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button id="saveRole" type="button" class="btn btn-primary">保存</button>
                     </div>
                 </div>
 
@@ -143,11 +125,16 @@
 <!-- bootstrap-daterangepicker -->
 <script th:src="@{/vendors/moment/min/moment.min.js}"></script>
 <script th:src="@{/vendors/bootstrap-daterangepicker/daterangepicker.js}"></script>
+
+<!-- iCheck -->
+<script th:src="@{/vendors/iCheck/icheck.min.js}"></script>
+
 <!-- Datatables -->
 <script th:src="@{/custom/js/jquery.dataTables.js}"></script>
 <script th:src="@{/custom/js/dataTables.bootstrap.js}"></script>
 
 <!-- Custom Theme Scripts -->
+<script th:src="@{/custom/js/custom.js}"></script>
 <script th:src="@{/custom/js/admin_role.js}"></script>
 </body>
 </html>
