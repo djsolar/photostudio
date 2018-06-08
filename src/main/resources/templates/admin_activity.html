@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -26,7 +26,7 @@
         <div class="col-md-12">
             <div class="x_panel">
                 <div class="x_title">
-                    <button id="addActivity" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> 添加</button>
+                    <button sec:authorize="hasAuthority('6')" id="addActivity" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> 添加</button>
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
@@ -155,9 +155,9 @@
                     <div class="mask">
                         <p>{{activity.startDate}} - {{activity.endDate}}</p>
                         <div class="tools tools-bottom" id="{{activity.id}}">
-                            <a class="eye"><i class="fa fa-eye"></i></a>
-                            <a class="edit"><i class="fa fa-edit"></i></a>
-                            <a class="delete"><i class="fa fa-trash"></i></a>
+                            <a sec:authorize="hasAuthority('9')" class="eye"><i class="fa fa-eye"></i></a>
+                            <a sec:authorize="hasAuthority('7')" class="edit"><i class="fa fa-edit"></i></a>
+                            <a sec:authorize="hasAuthority('8')" class="delete"><i class="fa fa-trash"></i></a>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 package com.zhxy.photostudio.service.impl;
 
+import com.zhxy.photostudio.domain.User;
 import com.zhxy.photostudio.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        return userRepository.findUserByUsername(userName);
+        User user = userRepository.findUserByUsername(userName);
+        return user;
     }
 
 }

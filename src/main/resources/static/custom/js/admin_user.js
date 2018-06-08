@@ -25,7 +25,27 @@ function init_button_handler() {
             }
         });
     });
+    
+    $("#resetUser").click(function () {
 
+        var rowData = userTable.rows(".selected").data();
+        if (rowData.length === 0)
+            return;
+        var id = rowData[0].id;
+
+        $.ajax({
+            url: "/admin/account/reset",
+            type: "post",
+            dataType: "json",
+            data: {"id" : id},
+            success: function (data) {
+                if (data.status) {
+                    userTable.ajax.reload(null, false);
+                }
+            }
+        });
+    });
+    
     $("#cancelUser").click(function () {
         $("#addUserModal").modal("hide");
     });
@@ -59,6 +79,33 @@ function init_button_handler() {
             success: function (data) {
                 if (data.status) {
                     userTable.ajax.reload(null, false);
+                }
+            }
+        });
+    });
+    
+    $("#editUser").click(function () {
+        var rowData = userTable.rows(".selected").data();
+        if (rowData.length === 0)
+            return;
+        var rowData = rowData[0];
+        $("#userForm input[name='nickName']").val(rowData.nickName);
+        $("#userForm input[name='username']").val(rowData.username);
+        $("#userForm input[name='id']").val(rowData.id);
+        $.ajax({
+            url: "/admin/role/all",
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                if (data.status) {
+                    $("#userForm select").empty();
+                    for(var i = 0; i < data.entity.length; i++) {
+                        var entity = data.entity[i];
+                        var optionHtml = $("<option></option>").attr("value", entity.id).text(entity.name);
+                        $("#userForm select").append(optionHtml);
+                    }
+                    $("#userForm select").val(rowData.role.id);
+                    $("#addUserModal").modal("show");
                 }
             }
         });

@@ -7,6 +7,7 @@ $(function () {
 
 function init_button_handler() {
     $("#addRole").click(function () {
+        clear_role_form();
         $("#addRoleModal h4#myModalLabel").text("添加角色");
         $("#addRoleModal").modal("show");
     });
@@ -19,7 +20,7 @@ function init_button_handler() {
             success: function (data) {
                 if (data.status) {
                     $("#addRoleModal").modal("hide");
-                    $("#roleForm")[0].reset();
+                    clear_role_form();
                     roleTable.ajax.reload(null, false);
                 }
             }
@@ -51,29 +52,30 @@ function init_button_handler() {
         if (rowData.length === 0)
             return;
         var data = rowData[0];
+        var authorities = data.authorities;
         $("input[name='name']").val(data.name);
-        for(var i = 0; i < data.authorities.length; i++) {
-            var authority = data.authorities[i];
-            $("input[value='checkbox']").each(function () {
+        $("input[name='id']").val(data.id);
+        for(var i = 0; i < authorities.length; i++) {
+            var authority = authorities[i];
+            $("input[type='checkbox']").each(function () {
                 var code = $(this).attr("value");
-                if (authority.code === code) {
+                console.log("code: " + code + ", authority.code: " + authority.code);
+                if (authority.code === parseInt(code)) {
                     console.log("相等");
-                    $(this).checked(true);
-                    break;
+                    $(this).iCheck("check");
                 }
         });
         }
-        console.log(data);
-        /*$.ajax({
-            url: "/admin/role/getOne",
-            type: "post",
-            dataType: "json",
-            data: {"id": id},
-            success: function (data) {
-
-            }
-        });*/
     });
+}
+
+function clear_role_form() {
+    $("input[type='checkbox']").each(function () {
+        console.log("反选");
+        $(this).iCheck("uncheck");
+    });
+    $("#roleForm")[0].reset();
+    $("#roleForm input[name='id']").val("");
 }
 
 function extendDateFun() {

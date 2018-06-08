@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -36,11 +36,13 @@
             <div class="x_panel">
                 <div class="x_title">
                     <div class="x_content">
-                        <button id="addUser" type="button" class="btn btn-primary" data-toggle="modal"><i class="fa fa-plus"></i>  添加 </button>
+                        <button sec:authorize="hasAuthority('24')" id="addUser" type="button" class="btn btn-primary" data-toggle="modal"><i class="fa fa-plus"></i>  添加 </button>
 
-                        <button id="editUser" type="button" class="btn btn-success"><i class="fa fa-edit"></i> 重置 </button>
+                        <button sec:authorize="hasAuthority('25')" id="editUser" type="button" class="btn btn-success"><i class="fa fa-edit"></i> 编辑 </button>
 
-                        <button id="deleteUser" type="button" class="btn btn-danger"><i class="fa fa-trash"></i>  删除 </button>
+                        <button sec:authorize="hasAuthority('26')" id="resetUser" type="button" class="btn btn-success"><i class="fa fa-edit"></i> 重置 </button>
+
+                        <button sec:authorize="hasAuthority('27')" id="deleteUser" type="button" class="btn btn-danger"><i class="fa fa-trash"></i>  删除 </button>
 
                     </div>
                     <div class="clearfix"></div>

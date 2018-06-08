@@ -2,6 +2,7 @@ package com.zhxy.photostudio.service;
 
 import com.zhxy.photostudio.domain.User;
 import com.zhxy.photostudio.util.DataTableViewPage;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
@@ -13,7 +14,9 @@ public interface UserService {
 
     User saveUser(User user, Integer roleId);
 
+    User updateUser(Integer id, String nickName, String password, String newPassword, String confirmPassword, MultipartFile avatar);
+
     boolean deleteUser(Integer id);
 
-    void resetUser(Integer id);
+    boolean resetUser(Integer id);
 }

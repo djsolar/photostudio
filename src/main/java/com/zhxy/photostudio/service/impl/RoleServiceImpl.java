@@ -42,7 +42,7 @@ public class RoleServiceImpl implements RoleService {
     public void addAdminRole() {
 
         String[] authorities = new String[] {
-                "添加客户", "修改客户", "删除客户", "添加订单", "修改订单", "添加活动", "修改活动", "删除活动","查看活动", "添加套系", "修改套系", "删除套系",
+                "添加客户", "修改客户", "删除客户", "查看订单", "添加订单", "修改订单", "添加活动", "修改活动", "删除活动","查看活动", "添加套系", "修改套系", "删除套系",
                 "删除套系", "添加商品", "修改商品", "删除商品", "添加相册", "查看相册", "置顶相册", "删除相册", "添加角色", "修改角色", "删除角色",
                 "添加用户", "修改用户", "重置用户", "删除用户"
         };
@@ -104,6 +104,9 @@ public class RoleServiceImpl implements RoleService {
         Role role;
         if (id != null) {
             role = roleRepository.getOne(id);
+            if (role.getName().equals("管理员")) {
+                return;
+            }
             role.setUpdateTime(System.currentTimeMillis());
         } else {
             role = new Role();

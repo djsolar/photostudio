@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -34,11 +34,11 @@
             <div class="x_panel">
                 <div class="x_title">
                     <div class="x_content">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" id="addCommodity" ><i class="fa fa-plus"></i>  添加 </button>
+                        <button sec:authorize="hasAuthority('14')" type="button" class="btn btn-primary" data-toggle="modal" id="addCommodity" ><i class="fa fa-plus"></i>  添加 </button>
 
-                        <button type="button" class="btn btn-success" id="editCommodity"><i class="fa fa-edit"></i>  编辑 </button>
+                        <button sec:authorize="hasAuthority('15')" type="button" class="btn btn-success" id="editCommodity"><i class="fa fa-edit"></i>  编辑 </button>
 
-                        <button type="button" class="btn btn-danger" id="deleteCommodity"><i class="fa fa-trash"></i>  删除 </button>
+                        <button sec:authorize="hasAuthority('16')" type="button" class="btn btn-danger" id="deleteCommodity"><i class="fa fa-trash"></i>  删除 </button>
 
                     </div>
                     <div class="clearfix"></div>

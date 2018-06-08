@@ -5,7 +5,9 @@ import com.zhxy.photostudio.domain.User;
 import com.zhxy.photostudio.repository.RoleRepository;
 import com.zhxy.photostudio.repository.UserRepository;
 import com.zhxy.photostudio.service.UserService;
+import com.zhxy.photostudio.util.Config;
 import com.zhxy.photostudio.util.DataTableViewPage;
+import com.zhxy.photostudio.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,12 +15,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.File;
+import java.io.IOException;
 
 @Service
 @Transactional
@@ -32,6 +38,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private Config config;
 
     @Override
     public User addAdmin() {
@@ -83,14 +92,49 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user, Integer roleId) {
-        User user1 = userRepository.findUserByUsername(user.getUsername());
-        if (user1 != null)
+
+        User user1;
+        if (user.getId() != null) {
+            user1 = userRepository.getOne(user.getId());
+            if (user1.getAdmin() == 1) {
+                return null;
+            }
+            user1.setNickName(user.getNickName());
+            user1.setUsername(user.getUsername());
+            Role role = roleRepository.getOne(roleId);
+            user1.setRole(role);
+            return userRepository.save(user1);
+        } else {
+            user.setAdmin(0);
+            Role role = roleRepository.getOne(roleId);
+            user.setRole(role);
+            user.setAvatar("/images/img.jpg");
+            user.setPassword(bCryptPasswordEncoder.encode("123456"));
+            return userRepository.save(user);
+        }
+    }
+
+    @Override
+    public User updateUser(Integer id, String nickName, String password, String newPassword, String confirmPassword, MultipartFile avatar) {
+        User user = userRepository.getOne(id);
+        if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
             return null;
-        user.setAdmin(0);
-        Role role = roleRepository.getOne(roleId);
-        user.setRole(role);
-        user.setAvatar("/images/img.jpg");
-        user.setPassword(bCryptPasswordEncoder.encode("123456"));
+        }
+        if (StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(confirmPassword) || newPassword.equals(confirmPassword)) {
+            return null;
+        }
+        if (avatar != null) {
+            String originalName = avatar.getOriginalFilename();
+            String suffix = originalName.substring(originalName.lastIndexOf("."));
+            try {
+                String md5Name = MD5Util.getMd5ByFile(avatar.getBytes()) + suffix;
+                FileCopyUtils.copy(avatar.getBytes(), new File(config.getPhotoPath() + md5Name));
+                user.setAvatar("/" + md5Name);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
         return userRepository.save(user);
     }
 
@@ -105,9 +149,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetUser(Integer id) {
+    public boolean resetUser(Integer id) {
         User user = userRepository.getOne(id);
+        if (user.getAdmin() == 1) {
+            return false;
+        }
         user.setPassword(bCryptPasswordEncoder.encode("123456"));
         userRepository.save(user);
+        return true;
     }
 }

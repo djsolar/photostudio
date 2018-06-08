@@ -38,6 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .successForwardUrl("/admin/index")
                 .and()
                 .logout()
+                .logoutUrl("/admin/logout")
                 .logoutSuccessUrl("/admin/login")
                 .permitAll()
                 .and().csrf().disable();

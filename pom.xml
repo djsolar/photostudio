@@ -66,6 +66,14 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		
+		<dependency>
+			<groupId>thymeleaf-extras-springsecurity4-3.0.2.RELEASE</groupId>
+			<artifactId>thymeleaf-extras-springsecurity4-3.0.2.RELEASE</artifactId>
+			<version>1.0.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/thymeleaf-extras-springsecurity4-3.0.2.RELEASE.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>

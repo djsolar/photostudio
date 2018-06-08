@@ -47,7 +47,7 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         for(Authority authority : role.getAuthorities()) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
+            grantedAuthorities.add(new SimpleGrantedAuthority(String.valueOf(authority.getCode())));
         }
         return grantedAuthorities;
     }

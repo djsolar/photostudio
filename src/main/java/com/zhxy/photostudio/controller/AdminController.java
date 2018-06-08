@@ -364,10 +364,24 @@ public class AdminController {
         return new ResponseBean<>(true);
     }
 
+    @RequestMapping(value = "/account/update", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> updateUser(Integer id, String nickName, String password, String newPassword, String confirmPassword, MultipartFile avatar) {
+        User user = userService.updateUser(id, nickName, password, newPassword, confirmPassword, avatar);
+        return new ResponseBean<>(user != null);
+    }
+
     @RequestMapping(value = "/account/delete", method = {RequestMethod.POST})
     @ResponseBody
     public ResponseBean<String> deleteUser(Integer id) {
         boolean success = userService.deleteUser(id);
+        return new ResponseBean<>(success);
+    }
+
+    @RequestMapping(value = "/account/reset", method = {RequestMethod.POST})
+    @ResponseBody
+    public ResponseBean<String> resetUser(Integer id) {
+        boolean success = userService.resetUser(id);
         return new ResponseBean<>(success);
     }
 
