@@ -96,6 +96,32 @@ function init_modal_handler() {
     $("#cancelAddServicePackage").click(function () {
         $("#addServicePackageModal").modal("hide");
     });
+
+    $("#serviceForm").bootstrapValidator({
+        excluded: [':disabled', ':hidden', ':not(:visible)'],
+        message: "验证失败",
+        feedbackIcons: {//根据验证结果显示的各种图标
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: '套系名称不能为空'
+                    }
+                }
+            },
+            womenName: {
+                validators: {
+                    notEmpty: {
+                        message: '小姐姓名不能为空'
+                    }
+                }
+            }
+        }
+    });
 }
 
 function refreshServicePackage() {

@@ -70,6 +70,8 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer.getId() == null) {
             customer.setDeleted(false);
             customer.setCreateTime(System.currentTimeMillis());
+        } else {
+            customer.setDeleted(false);
         }
         customer.setUpdateTime(System.currentTimeMillis());
         return customerRepository.save(customer);

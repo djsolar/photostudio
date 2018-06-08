@@ -13,10 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -120,13 +117,8 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/login", method = {RequestMethod.GET})
-    public String login(Model model, String error, String logout) {
-        if (error != null) {
-            model.addAttribute("error", "账户名或者密码错误");
-        }
-        if (logout != null){
-            model.addAttribute("message", "账户已经退出");
-        }
+    public String login(Model model, @ModelAttribute("message") String message) {
+        model.addAttribute("message", message);
         return "admin_login";
     }
 
@@ -366,8 +358,8 @@ public class AdminController {
 
     @RequestMapping(value = "/account/update", method = {RequestMethod.POST})
     @ResponseBody
-    public ResponseBean<String> updateUser(Integer id, String nickName, String password, String newPassword, String confirmPassword, MultipartFile avatar) {
-        User user = userService.updateUser(id, nickName, password, newPassword, confirmPassword, avatar);
+    public ResponseBean<String> updateUser(String username, String nickName, String password, String newPassword, String confirmPassword, @RequestParam(value = "avatar", required = false)MultipartFile avatar) {
+        User user = userService.updateUser(username, nickName, password, newPassword, confirmPassword, avatar);
         return new ResponseBean<>(user != null);
     }
 

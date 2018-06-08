@@ -199,7 +199,7 @@
                 <h4 class="modal-title" id="myModalLabel1">编辑资料</h4>
             </div>
             <div class="modal-body">
-                <form id="userForm" data-parsley-validate class="form-horizontal form-label-left">
+                <form id="userForm" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
 
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12"> 头像 </label>
@@ -238,7 +238,7 @@
                             <input type="password" id="confirmPassword" name="confirmPassword" required="required" class="form-control col-md-7 col-xs-12" >
                         </div>
                     </div>
-                    <input type="hidden" name="id" th:value="${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}">
+                    <input type="hidden" name="username" th:value="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username}">
                 </form>
             </div>
 
@@ -261,6 +261,7 @@
 <script th:src="@{/vendors/bootstrap/dist/js/bootstrap.min.js}"></script>
 
 <!-- Custom Theme Scripts -->
+<script th:src="@{/custom/js/jquery.form.js}"></script>
 <script th:src="@{/custom/js/custom.js}"></script>
 <script th:src="@{/custom/js/admin_index.js}"></script>
 </body>

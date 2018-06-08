@@ -18,13 +18,15 @@ function init_button_handler() {
     });
 
     $("#saveUser").click(function () {
-        $.ajax({
+        $("#userForm").ajaxSubmit({
             url: "/admin/account/update",
             type: "post",
             dataType: "json",
-            data: $("#userForm").serialize(),
             success: function (data) {
-                
+                if (data.status) {
+                    $("#editProfileModal").modal("hide");
+                    window.location = "/admin/logout";
+                }
             }
         });
     });

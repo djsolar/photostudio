@@ -66,7 +66,7 @@ function refreshCustomer() {
         },
         "processing": false,
         "serverSide": true,
-        "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+        "fnCreatedRow": function (nRow, aData, iDataIndex) {
             $(nRow).attr('id', aData.id);
         },
         "ajax": {
@@ -144,7 +144,7 @@ function refreshCustomer() {
             }
         ]
     });
-    table.on( 'draw', function () {
+    table.on('draw', function () {
         $("#customerTable tbody tr").click(function () {
             if ($(this).hasClass("selected")) {
                 $(this).removeClass("selected")
@@ -165,7 +165,7 @@ function refreshCustomer() {
                         $("#addOrderModal input[name='customerId']").val(customerId);
                         var $SELECT = $("select.select2_multiple");
                         $SELECT.empty();
-                        for(var i = 0; i < data.entity.length; i++) {
+                        for (var i = 0; i < data.entity.length; i++) {
                             var e = data.entity[i];
                             $SELECT.append($("<option></option>").text(e.name).attr("value", e.id).attr("price", e.price));
                         }
@@ -190,7 +190,7 @@ function refreshCustomer() {
                                 if (data.status) {
                                     var $SELECT = $("select.select2_multiple");
                                     $SELECT.empty();
-                                    for(var i = 0; i < data.entity.length; i++) {
+                                    for (var i = 0; i < data.entity.length; i++) {
                                         var e = data.entity[i];
                                         $SELECT.append($("<option></option>").text(e.name).attr("value", e.id).attr("price", e.price));
                                     }
@@ -211,7 +211,7 @@ function refreshCustomer() {
                 }
             });
         });
-    } );
+    });
     return table;
 }
 
@@ -232,7 +232,7 @@ function init_modal_handler() {
         clear_custom_form();
         $("#addCustomerModal").modal("show");
     });
-    
+
     $("#deleteCustomer").click(function () {
         var rowData = customerTable.rows(".selected").data();
         if (rowData.length === 0)
@@ -250,7 +250,7 @@ function init_modal_handler() {
             }
         })
     });
-    
+
     $("#editCustomer").click(function () {
         var rowData = customerTable.rows(".selected").data();
         if (rowData.length === 0)
@@ -265,29 +265,31 @@ function init_modal_handler() {
         $("#addCustomerModal input[name='weedingDate']").val(data.weedingDate);
         $("#addCustomerModal input[name='id']").val(data.id);
     });
-    
+
     $("#cancelAddCustomer").click(function () {
         $("#addCustomerModal").modal("hide")
     });
 
     $("#saveCustomer").click(function () {
-        $.ajax({
-            url: "/admin/customer/add",
-            type: "post",
-            dataType: "json",
-            data: $("#customerForm").serialize(),
-            success: function (data) {
-                if (data.status) {
-                    $("#addCustomerModal").modal("hide");
-                    clear_custom_form();
-                    customerTable.ajax.reload(null, false);
+        if ($("#customerForm").data('bootstrapValidator').validate().isValid()) {
+            $.ajax({
+                url: "/admin/customer/add",
+                type: "post",
+                dataType: "json",
+                data: $("#customerForm").serialize(),
+                success: function (data) {
+                    if (data.status) {
+                        $("#addCustomerModal").modal("hide");
+                        clear_custom_form();
+                        customerTable.ajax.reload(null, false);
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 
     $("select.select2_multiple").change(function () {
-        var options=$("select.select2_multiple option:selected");
+        var options = $("select.select2_multiple option:selected");
         console.log(options.attr("price"));
         $("input[name='price']").val(options.attr("price"));
     });
@@ -297,17 +299,114 @@ function init_modal_handler() {
     });
 
     $("#saveOrder").click(function () {
-        $.ajax({
-            url: "/admin/order/add",
-            type: "post",
-            dataType: "json",
-            data: $("#orderForm").serialize(),
-            success: function (data) {
-                clear_order_form();
-                $("#addOrderModal").modal("hide");
-                customerTable.ajax.reload(null, false);
+        if ($("#orderForm").data('bootstrapValidator').validate().isValid()) {
+            $.ajax({
+                url: "/admin/order/add",
+                type: "post",
+                dataType: "json",
+                data: $("#orderForm").serialize(),
+                success: function (data) {
+                    clear_order_form();
+                    $("#addOrderModal").modal("hide");
+                    customerTable.ajax.reload(null, false);
+                }
+            });
+        }
+    });
+
+    $("#customerForm").bootstrapValidator({
+        excluded: [':disabled', ':hidden', ':not(:visible)'],
+        message: "验证失败",
+        feedbackIcons: {//根据验证结果显示的各种图标
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            manName: {
+                validators: {
+                    notEmpty: {
+                        message: '先生姓名不能为空'
+                    }
+                }
+            },
+            womenName: {
+                validators: {
+                    notEmpty: {
+                        message: '小姐姓名不能为空'
+                    }
+                }
+            },
+            phone: {
+                message: '手机号码不合法',
+                validators: {
+                    notEmpty: {
+                        message: '手机号码不能为空'
+                    },
+                    stringLength: {
+                        min: 11,
+                        max: 11,
+                        message: '请输入11位手机号码'
+                    },
+                    regexp: {
+                        regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+                        message: '请输入正确的手机号码'
+                    }
+                }
+            },
+            address: {
+                validators: {
+                    notEmpty: {
+                        message: '地址不能为空'
+                    }
+                }
+            },
+            weedingDate: {
+                validators: {
+                    notEmpty: {
+                        message: ' 佳期不能为空'
+                    }
+                }
             }
-        });
+        }
+    });
+
+    $("#orderForm").bootstrapValidator({
+        excluded: [':disabled', ':hidden', ':not(:visible)'],
+        message: "验证失败",
+        feedbackIcons: {//根据验证结果显示的各种图标
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            takePhotoTime: {
+                validators: {
+                    notEmpty: {
+                        message: '拍摄日期不能为空'
+                    }
+                }
+            },
+            selectPhotoTime: {
+                validators: {
+                    notEmpty: {
+                        message: '选片日期不能为空'
+                    }
+                }
+            },
+            pickPhotoTime: {
+                notEmpty: {
+                    message: '选片日期不能为空'
+                }
+            },
+            serviceId: {
+                validators: {
+                    notEmpty: {
+                        message: '套系不能为空'
+                    }
+                }
+            }
+        }
     });
 }
 
@@ -322,7 +421,7 @@ function init_daterangepicker_single_call() {
         "singleDatePicker": true,
         "autoApply": true,
         "locale": {
-        "format": "YYYY-MM-DD",
+            "format": "YYYY-MM-DD",
             "separator": " - ",
             "applyLabel": "Apply",
             "cancelLabel": "Cancel",
@@ -331,30 +430,30 @@ function init_daterangepicker_single_call() {
             "customRangeLabel": "Custom",
             "weekLabel": "W",
             "daysOfWeek": [
-            "日",
-            "一",
-            "二",
-            "三",
-            "四",
-            "五",
-            "六"
-        ],
+                "日",
+                "一",
+                "二",
+                "三",
+                "四",
+                "五",
+                "六"
+            ],
             "monthNames": [
-            "一月",
-            "二月",
-            "三月",
-            "四月",
-            "五月",
-            "六月",
-            "七月",
-            "八月",
-            "九月",
-            "十月",
-            "十一月",
-            "十二月"
-        ],
+                "一月",
+                "二月",
+                "三月",
+                "四月",
+                "五月",
+                "六月",
+                "七月",
+                "八月",
+                "九月",
+                "十月",
+                "十一月",
+                "十二月"
+            ],
             "firstDay": 1
-    },
+        },
         "opens": "right"
     }
 

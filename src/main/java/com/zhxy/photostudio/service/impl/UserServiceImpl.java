@@ -115,12 +115,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Integer id, String nickName, String password, String newPassword, String confirmPassword, MultipartFile avatar) {
-        User user = userRepository.getOne(id);
+    public User updateUser(String username, String nickName, String password, String newPassword, String confirmPassword, MultipartFile avatar) {
+        User user = userRepository.findUserByUsername(username);
         if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
             return null;
         }
-        if (StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(confirmPassword) || newPassword.equals(confirmPassword)) {
+        if (StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(confirmPassword) || !newPassword.equals(confirmPassword)) {
             return null;
         }
         if (avatar != null) {
@@ -134,6 +134,7 @@ public class UserServiceImpl implements UserService {
                 e.printStackTrace();
             }
         }
+        user.setNickName(nickName);
         user.setPassword(bCryptPasswordEncoder.encode(newPassword));
         return userRepository.save(user);
     }

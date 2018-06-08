@@ -14,7 +14,7 @@ public interface UserService {
 
     User saveUser(User user, Integer roleId);
 
-    User updateUser(Integer id, String nickName, String password, String newPassword, String confirmPassword, MultipartFile avatar);
+    User updateUser(String username, String nickName, String password, String newPassword, String confirmPassword, MultipartFile avatar);
 
     boolean deleteUser(Integer id);
 
