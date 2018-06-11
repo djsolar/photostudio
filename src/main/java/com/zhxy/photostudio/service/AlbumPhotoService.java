@@ -21,6 +21,8 @@ public interface AlbumPhotoService {
 
     List<PhotoAlbum> listPhotoAlbum();
 
+    List<PhotoAlbum> listTopPhotoAlbum();
+
     PhotoAlbumView findPhotoAlbumById(Integer id);
 
 }

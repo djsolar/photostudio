@@ -82,6 +82,8 @@ function init_sidebar() {
         }
     });
 
+    $RIGHT_COL.load("/admin/home");
+
     /*$SIDEBAR_MENU.find('a').on('click', function (ev) {
         console.log('clicked - sidebar_menu');
         var $li = $(this).parent();

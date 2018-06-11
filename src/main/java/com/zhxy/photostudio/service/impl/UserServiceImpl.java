@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
             try {
                 String md5Name = MD5Util.getMd5ByFile(avatar.getBytes()) + suffix;
                 FileCopyUtils.copy(avatar.getBytes(), new File(config.getPhotoPath() + md5Name));
-                user.setAvatar("/" + md5Name);
+                user.setAvatar("/photo/" + md5Name);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -66,6 +66,17 @@ public class AdminController {
         return "admin_home";
     }
 
+    @RequestMapping(value = "/home/getevents")
+    @ResponseBody
+    public DataTableViewPage<CustomerView> homeData(HttpServletRequest request) {
+        int start = Integer.parseInt(request.getParameter("start"));
+        int length = Integer.parseInt(request.getParameter("length"));
+        String searchValue = request.getParameter("search[value]");
+        System.out.println("searchValue: " + searchValue);
+        int page = start / length;
+        return orderService.listTodayCustomer(page, length, searchValue);
+    }
+
     @RequestMapping(value = "activity")
     public String activity() {
         return "admin_activity";

@@ -2,6 +2,7 @@ package com.zhxy.photostudio.service;
 
 import com.zhxy.photostudio.domain.Customer;
 import com.zhxy.photostudio.domain.Order;
+import com.zhxy.photostudio.util.CustomerView;
 import com.zhxy.photostudio.util.DataTableViewPage;
 import com.zhxy.photostudio.util.OrderView;
 
@@ -14,4 +15,7 @@ public interface OrderService {
     OrderView getOrder(Integer id);
 
     DataTableViewPage<OrderView> listOrder(int page, int pageSize, String searchValue);
+
+    DataTableViewPage<CustomerView> listTodayCustomer(int page, int length, String searchValue);
+
 }

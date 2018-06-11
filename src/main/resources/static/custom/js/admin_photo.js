@@ -88,7 +88,7 @@ function photo_operation_bind() {
                 if (data.status) {
                     $("#eyePhotoContent").modal("show");
                     $("#photoDescription").text("相册描述：" + data.entity.description);
-                    $("#photoContent").attr("src", "/" + data.entity.imageName);
+                    $("#photoContent").attr("src", "/photo/" + data.entity.imageName);
                 }
             }
         });

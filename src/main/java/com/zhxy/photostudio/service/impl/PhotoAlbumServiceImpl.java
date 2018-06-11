@@ -112,6 +112,17 @@ public class PhotoAlbumServiceImpl implements AlbumPhotoService {
     }
 
     @Override
+    public List<PhotoAlbum> listTopPhotoAlbum() {
+        Specification<PhotoAlbum> specification = new Specification<PhotoAlbum>() {
+            @Override
+            public Predicate toPredicate(Root<PhotoAlbum> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get("top").as(Boolean.class), true);
+            }
+        };
+        return photoAlbumRepository.findAll(specification, new Sort(Sort.Direction.DESC, "updateTime"));
+    }
+
+    @Override
     public PhotoAlbumView findPhotoAlbumById(Integer id) {
         Optional<PhotoAlbum> photoAlbumOptional = photoAlbumRepository.findById(id);
         if (photoAlbumOptional.isPresent()) {

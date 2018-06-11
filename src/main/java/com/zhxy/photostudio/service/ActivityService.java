@@ -14,6 +14,8 @@ public interface ActivityService {
 
     List<Activity> listActivity();
 
+    List<Activity> listValidActivity();
+
     ActivityView findActivityContent(Integer id);
 
     Activity findActivityById(Integer id);

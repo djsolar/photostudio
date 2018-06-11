@@ -3,12 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+    <!-- Bootstrap -->
+    <link th:href="@{/vendors/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link th:href="@{/vendors/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
+    <link th:href="@{/custom/css/custom.min.css}" rel="stylesheet">
+    <style type="text/css">
 
+    </style>
 </head>
 <body>
-    <video src="http://img.bjlmfq.com/video/vkngs_2.mp4">
+<div class="container">
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height: 500px;">
+        <!-- Indicators -->
+        <!-- <ol class="carousel-indicators">
+             <li th:each="activity, iterStat: ${activities}" th:class="${iterStat.index} == 0 ? '': 'active'" data-target="#carousel-example-generic" data-slide-to="${iterStat.index}"></li>
+             &lt;!&ndash;<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+             <li data-target="#carousel-example-generic" data-slide-to="2"></li>&ndash;&gt;
+         </ol>-->
 
-    </video>
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+            <div th:each="activity, iterStat: ${activities}" th:class="${iterStat.index} == 0 ? 'item active': 'item'">
+                <img th:detail="'/photo/' + ${activity.detailPhoto.md5Name}"
+                     th:src="'/photo/' + ${activity.thumbnailPhoto.md5Name}" style="height: 500px; width: 100%;">
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" id="aaron1"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" id="aaron2"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+    <div class="row">
+        <div th:each="photoAlbum, iterStat: ${photoAlbums}" class="col-md-55">
+            <div class="thumbnail">
+                <div class="image view view-first">
+                    <img style="width: 100%; display: block;" th:detail="'/photo/' + ${photoAlbum.contentPhoto.md5Name}"
+                         th:src="'/photo/' + ${photoAlbum.thumbnailPhoto.md5Name}" alt="image"/>
+                    <!--<div class="mask">
+                        <p th:text="${photoAlbum.category}"></p>
+                        <div class="tools tools-bottom" id="${photoAlbum.id}">
+                            <a class="eye"><i class="fa fa-eye"></i></a>
+                        </div>
+                    </div>-->
+                </div>
+                <div class="caption">
+                    <p th:text="${photoAlbum.caption}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer style="margin-left: 0px;">
+        <div>
+            <p>©2018 All Rights Reserved. xx影楼管理系统</p>
+            <p>电话：0370-8888888</p>
+        </div>
+    </footer>
+</div>
+
+<div class="modal fade" id="eyePhotoContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    查看相册
+                </h4>
+            </div>
+            <div class="modal-body">
+                <img id="photoContent" src="" width="100%" style="overflow-y: scroll">
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+<!-- jQuery -->
+<script th:src="@{/vendors/jquery/dist/jquery.min.js}"></script>
+<!-- Bootstrap -->
+<script th:src="@{/vendors/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        $("img[detail]").click(function () {
+            $("#eyePhotoContent").modal("show");
+            $("#eyePhotoContent img").attr("src", $(this).attr("detail"));
+        });
+    });
+</script>
 </body>
 </html>

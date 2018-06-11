@@ -97,7 +97,7 @@ function init_activity_operation() {
                 if (data.status) {
                     $("#eyeActivityContent").modal("show");
                     $("#activityDescription").text("活动描述：" + data.entity.description);
-                    $("#activityContent").attr("src", "/" + data.entity.imageName);
+                    $("#activityContent").attr("src", "/photo/" + data.entity.imageName);
                 }
             }
         });

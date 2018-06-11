@@ -23,7 +23,10 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @Transactional
@@ -104,6 +107,22 @@ public class ActivityServiceImpl implements ActivityService {
             @Override
             public Predicate toPredicate(Root<Activity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.equal(root.get("deleted").as(Boolean.class), false);
+            }
+        };
+        return activityRepository.findAll(specification, new Sort(Sort.Direction.DESC, "updateTime"));
+    }
+
+    @Override
+    public List<Activity> listValidActivity() {
+        Date today = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        String todayDate = sdf.format(today);
+        Specification<Activity> specification = new Specification<Activity>() {
+            @Override
+            public Predicate toPredicate(Root<Activity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                Predicate p1 = criteriaBuilder.lessThanOrEqualTo(root.get("startDate").as(String.class), todayDate);
+                Predicate p2 = criteriaBuilder.greaterThanOrEqualTo(root.get("endDate").as(String.class), todayDate);
+                return criteriaBuilder.and(p1, p2);
             }
         };
         return activityRepository.findAll(specification, new Sort(Sort.Direction.DESC, "updateTime"));

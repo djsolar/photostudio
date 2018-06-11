@@ -7,6 +7,7 @@ import com.zhxy.photostudio.repository.CustomerRepository;
 import com.zhxy.photostudio.repository.OrderRepository;
 import com.zhxy.photostudio.repository.ServicePackageRepository;
 import com.zhxy.photostudio.service.OrderService;
+import com.zhxy.photostudio.util.CustomerView;
 import com.zhxy.photostudio.util.DataTableViewPage;
 import com.zhxy.photostudio.util.OrderView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @Transactional
@@ -140,6 +144,65 @@ public class OrderServiceImpl implements OrderService {
         dataTableViewPage.setAaData(orderViews);
         dataTableViewPage.setRecordsTotal(orderViews.size());
         dataTableViewPage.setRecordsFiltered(orderViews.size());
+        return dataTableViewPage;
+    }
+
+    @Override
+    public DataTableViewPage<CustomerView> listTodayCustomer(int page, int length, String searchValue) {
+        Sort sort = new Sort(Sort.Direction.DESC, "updateTime");
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(new Date());
+        Page<Order> orderPage;
+        if (StringUtils.isEmpty(searchValue)) {
+            Specification<Order> specification = new Specification<Order>() {
+                @Override
+                public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    Predicate p1 = criteriaBuilder.equal(root.get("deleted").as(Boolean.class), false);
+                    Predicate p2 = criteriaBuilder.equal(root.get("takePhotoTime").as(String.class), today);
+                    Predicate p3 = criteriaBuilder.equal(root.get("selectPhotoTime").as(String.class), today);
+                    Predicate p4 = criteriaBuilder.equal(root.get("pickPhotoTime").as(String.class), today);
+                    return criteriaBuilder.and(criteriaBuilder.or(p2, p3, p4));
+                }
+            };
+            orderPage = orderRepository.findAll(specification, PageRequest.of(page, length, sort));
+        } else {
+            Specification<Order> orderSpecification = new Specification<Order>() {
+
+                @Override
+                public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
+                    Predicate p1 = cb.like(root.join("customer").get("manName").as(String.class), "%" + searchValue + "%");
+                    Predicate p2 = cb.like(root.join("customer").get("womenName").as(String.class), "%" + searchValue + "%");
+                    Predicate p3 = cb.like(root.join("customer").get("phone").as(String.class), "%" + searchValue + "%");
+                    Predicate p4 = cb.like(root.join("customer").get("address").as(String.class), "%" + searchValue + "%");
+                    Predicate p5 = cb.equal(root.get("deleted").as(Boolean.class), false);
+                    Predicate p6 = cb.equal(root.get("takePhotoTime").as(String.class), today);
+                    Predicate p7 = cb.equal(root.get("selectPhotoTime").as(String.class), today);
+                    Predicate p8 = cb.equal(root.get("pickPhotoTime").as(String.class), today);
+                    return cb.and(p5, cb.or(p1, p2, p3, p4), cb.or(p6, p7, p8));
+                }
+            };
+            orderPage = orderRepository.findAll(orderSpecification, PageRequest.of(page, length, sort));
+        }
+        List<Order> orders = orderPage.getContent();
+        List<CustomerView> customerViews = new ArrayList<>();
+        for(Order order : orders) {
+            CustomerView customerView = new CustomerView();
+            customerView.setId(order.getId());
+            customerView.setManName(order.getCustomer().getManName());
+            customerView.setWomenName(order.getCustomer().getWomenName());
+            customerView.setPhone(order.getCustomer().getPhone());
+            if (today.equals(order.getTakePhotoTime())) {
+                customerView.setEvent("客户今日拍照");
+            } else if (today.equals(order.getSelectPhotoTime())) {
+                customerView.setEvent("客户今日挑选照片");
+            } else if (today.equals(order.getPickPhotoTime())) {
+                customerView.setEvent("客户今日取照片");
+            }
+            customerViews.add(customerView);
+        }
+        DataTableViewPage<CustomerView> dataTableViewPage = new DataTableViewPage<>();
+        dataTableViewPage.setRecordsFiltered(customerViews.size());
+        dataTableViewPage.setRecordsTotal(customerViews.size());
+        dataTableViewPage.setAaData(customerViews);
         return dataTableViewPage;
     }
 }
